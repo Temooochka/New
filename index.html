@@ -210,7 +210,7 @@
             margin-bottom: 12px;
             font-size: 16px;
             line-height: 1.2;
-            cursor: pointer; /* Добавлено: чтобы легенда была кликабельной */
+            cursor: pointer; 
         }
         .legend-item:active {
             opacity: 0.8;
@@ -421,11 +421,10 @@
         });
 
         // --- ЛОГИКА НАВИГАЦИИ ---
-        
+
         // Клик по любому элементу легенды (для перехода на details.html)
         document.querySelectorAll('.legend-item').forEach(item => {
              item.addEventListener('click', () => {
-                 // Здесь в реальном приложении можно было бы передать ID члена семьи
                  window.location.href = EXPENSES_DETAIL_FILE;
              });
         });
@@ -460,9 +459,22 @@
              window.location.href = IMPORT_EXPORT_FILE; 
         });
         
-        // Кнопка Назад (вверху слева) - в рамках прототипа просто перезагружает страницу
+        // Кнопка Назад (вверху слева)
         document.querySelector('.back-button').addEventListener('click', () => {
              window.location.reload(); 
+        });
+        
+        // Таб "Вся аналитика" (Остаемся на Главном)
+        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
+             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+             document.getElementById('allAnalyticsTab').classList.add('active');
+        });
+        
+        // Таб "Доходы"
+        document.getElementById('incomeTab').addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('incomeTab').classList.add('active');
+            alert('Экран доходов еще не разработан.');
         });
 
     });
