@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* =================== CSS СТИЛИ =================== */
+        /* CSS СТИЛИ - (Тот же код, что и ранее) */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -377,7 +377,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Логика для графика
+        // Логика для графика на текущей странице (Вся аналитика)
         const ctx = document.getElementById('expenseChart').getContext('2d');
         new Chart(ctx, {
             type: 'pie',
@@ -400,10 +400,10 @@
             }
         });
 
-        // ЛОГИКА ПЕРЕХОДА НА details.html
+        // ЛОГИКА ПЕРЕХОДА НА expenses-detail.html (ОБНОВЛЕНИЕ!)
         const expensesTab = document.getElementById('expensesTab');
         expensesTab.addEventListener('click', () => {
-            window.location.href = 'details.html'; 
+            window.location.href = 'expenses-detail.html'; // НОВОЕ ИМЯ ФАЙЛА
         });
 
         // Клик на активную вкладку "Вся аналитика" (остаемся здесь)
@@ -418,6 +418,12 @@
             document.getElementById('incomeTab').classList.add('active');
             alert('Экран доходов еще не разработан.');
         });
+        
+        // Кнопка назад на первом экране
+        document.querySelector('.back-button').addEventListener('click', () => {
+             alert('Переход на Главный экран банка');
+        });
+
     });
 </script>
 </body>
