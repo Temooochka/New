@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Источники данных</title>
+    <title>Импорт данных</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
-        /* CSS Стили */
+        /* CSS Стили для import-export.html */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -41,143 +41,93 @@
             font-size: 13px;
             font-weight: 600;
         }
-        .status-icons i { margin-left: 5px; }
 
         .header-nav {
             padding: 0 20px;
+            padding-top: 10px;
         }
 
-        .back-settings {
+        .back-title {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
             padding-bottom: 15px;
             font-size: 18px;
             color: var(--text-color);
         }
-
-        .content {
-            padding: 0 20px;
+        .back-button { 
+            cursor: pointer;
+            margin-right: 20px;
+            font-size: 20px;
+        }
+        .screen-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
         }
 
-        .card {
-            background-color: white;
+        .content {
+            padding: 20px;
+        }
+        
+        /* Карточка с заголовком и иконкой */
+        .title-card {
+            background-color: var(--bg-light-gray);
             border-radius: 20px;
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
             padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .title-card h2 {
+            font-size: 20px;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+        .title-card p {
+            font-size: 14px;
+            margin: 0;
+            color: #666;
+        }
+        .title-card i {
+            font-size: 24px;
+            color: var(--alfa-red);
+        }
+
+        /* Кнопки форматов */
+        .format-button {
+            background-color: var(--bg-light-gray);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
             transition: background-color 0.1s;
         }
-        
-        .card:active {
-            background-color: #eee;
+        .format-button:active {
+            background-color: #ededed;
         }
-
-        .import-banner {
-            background-color: var(--bg-light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            margin-bottom: 25px;
-        }
-
-        .import-banner h3 {
-            font-size: 18px; 
+        .format-button h3 {
+            font-size: 18px;
             margin: 0;
             font-weight: 600;
         }
-
-        .import-banner p {
-            font-size: 14px;
-            margin: 0;
-            color: #666;
-            font-weight: 400;
-        }
-
-        .import-banner i {
-            font-size: 24px;
-            color: #666;
-        }
-
-        /* === БЛОК СОЕДИНЕНИЯ БАНКОВ (НОВЫЙ) === */
-        .bank-connect-card {
-            background: linear-gradient(135deg, #1080d0, #00508d);
-            color: white;
-            padding: 20px;
-            cursor: pointer;
-            margin-bottom: 25px;
-        }
-        .bank-connect-card h4 {
-            font-size: 17px;
-            margin: 0;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-        }
-        .bank-connect-card h4 i {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-        .bank-connect-card p {
-            font-size: 14px;
-            margin: 5px 0 15px 0;
-            opacity: 0.9;
-        }
-        .connect-button {
-            background-color: white;
-            color: #00508d;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-        }
-        /* === КОНЕЦ БЛОКА СОЕДИНЕНИЯ БАНКОВ === */
-
-        /* Заголовок секции */
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #666;
-            margin-bottom: 15px;
-            padding: 0 20px;
-        }
-
-        /* Карточки форматов */
-        .format-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            background-color: #fcfcfc;
-            cursor: pointer;
-        }
-
-        .format-card h3 {
-            font-size: 17px;
-            font-weight: 600;
-            margin: 0;
-        }
-        .format-card p {
-            font-size: 13px;
+        .format-button i {
+            font-size: 40px;
             color: #999;
-            margin: 3px 0 0 0;
-        }
-
-        .format-icon-wrapper {
-            font-size: 32px;
-            color: #555;
-            position: relative;
-        }
-
-        .fa-file-csv, .fa-file-excel, .fa-file-alt { 
-            color: #4CAF50; /* Зеленый цвет для файлов */
         }
         
+        .fa-file-csv::before { content: 'CSV'; font-family: sans-serif; font-size: 20px; font-weight: bold; padding-top: 5px; color: var(--alfa-red); }
+        .fa-file-excel::before { content: 'XLSX'; font-family: sans-serif; font-size: 20px; font-weight: bold; padding-top: 5px; color: #34A853; }
+        .fa-file-alt::before { content: 'TXT'; font-family: sans-serif; font-size: 20px; font-weight: bold; padding-top: 5px; color: #4285F4; }
+
+
+        /* Нижнее меню (скопировано) */
         .bottom-nav {
-            /* ... стили нижнего меню ... */
             position: fixed;
             bottom: 0;
             left: 50%;
@@ -194,13 +144,13 @@
             font-size: 11px;
             color: #888;
         }
+
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: pointer;
             position: relative;
-            font-weight: 500;
         }
         .nav-item i {
             font-size: 22px;
@@ -221,6 +171,9 @@
             text-align: center;
             font-weight: bold;
         }
+        .nav-item:last-child .badge { 
+            right: 20px; 
+        }
     </style>
 </head>
 <body>
@@ -237,63 +190,41 @@
     </div>
 
     <header class="header-nav">
-        <div class="back-settings">
-            <i class="fas fa-chevron-left back-button"></i>
+        <div class="back-title">
+            <i class="fas fa-chevron-left back-button" id="backButton"></i>
+            <h1 class="screen-title">Импортировать данные</h1>
         </div>
     </header>
 
     <main class="content">
 
-        <div class="card import-banner">
+        <div class="title-card">
             <div>
-                <h3>Источники данных</h3>
-                <p>Настройте синхронизацию и импорт</p>
+                <h2>Импортировать данные</h2>
+                <p>В любом удобном формате</p>
             </div>
-            <i class="fas fa-database"></i>
+            <i class="fas fa-download"></i>
         </div>
 
-        <div class="card bank-connect-card" id="bankConnectCard">
-            <h4><i class="fas fa-plug"></i> Автоматическая синхронизация</h4>
-            <p>Подключите счета других банков для бесшовного учета финансов.</p>
-            <button class="connect-button">Соединить другой банк</button>
+        <div class="format-button" id="importCsv">
+            <h3>Импорт в CSV</h3>
+            <i class="fas fa-file-csv"></i> 
         </div>
 
-        <div class="section-title" style="padding: 0;">Ручной импорт</div>
+        <div class="format-button" id="importXlsx">
+            <h3>Импорт в Xlsx</h3>
+            <i class="fas fa-file-excel"></i>
+        </div>
         
-        <div class="card format-card manual-import" data-format="CSV">
-            <div>
-                <h3>Импорт CSV-файла</h3>
-                <p>Подходит для большинства банковских выписок.</p>
-            </div>
-            <span class="format-icon-wrapper">
-                 <i class="fas fa-file-csv"></i> 
-            </span>
+        <div class="format-button" id="importTxt">
+            <h3>Импорт в TXT</h3>
+            <i class="fas fa-file-alt"></i>
         </div>
-
-        <div class="card format-card manual-import" data-format="XLS">
-            <div>
-                <h3>Импорт XLS/XLSX-файла</h3>
-                <p>Стандартный формат таблиц Excel.</p>
-            </div>
-            <span class="format-icon-wrapper">
-                <i class="fas fa-file-excel"></i>
-            </span>
-        </div>
-
-        <div class="card format-card manual-import" data-format="TXT">
-            <div>
-                <h3>Импорт TXT-файла</h3>
-                <p>Универсальный, требует ручной настройки колонок.</p>
-            </div>
-            <span class="format-icon-wrapper">
-                <i class="fas fa-file-alt"></i>
-            </span>
-        </div>
-
+        
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item">
+        <div class="nav-item main-nav">
             <i class="fas fa-home"></i>
             <span>Главный</span>
         </div>
@@ -319,40 +250,29 @@
 </div>
 
 <script>
-    const MAIN_SCREEN_FILE = 'index.html';
-    const BANK_CONNECT_FILE = 'bank-connect.html';
-    const FILE_UPLOAD_STEP_2_FILE = 'file-upload-step2.html'; 
-
     document.addEventListener('DOMContentLoaded', () => {
-
-        // Кнопка Назад (возврат на главный экран)
-        document.querySelector('.back-button').addEventListener('click', () => {
+        // Константа с именем файла главного экрана
+        const MAIN_SCREEN_FILE = 'index.html'; 
+        
+        // 1. Кнопка Назад (стрелка влево)
+        document.getElementById('backButton').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE; 
+        });
+        
+        // 2. Клик по нижнему меню (Главный)
+        document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE;
         });
 
-        // 🚀 НОВЫЙ ПЕРЕХОД: Соединить другой банк
-        document.getElementById('bankConnectCard').addEventListener('click', () => {
-            window.location.href = BANK_CONNECT_FILE;
+        // 3. Обработчики для кнопок форматов
+        document.getElementById('importCsv').addEventListener('click', () => {
+            alert('Запуск импорта данных в формате CSV...');
         });
-        document.querySelector('.connect-button').addEventListener('click', (e) => {
-            e.stopPropagation();
-            window.location.href = BANK_CONNECT_FILE;
+        document.getElementById('importXlsx').addEventListener('click', () => {
+            alert('Запуск импорта данных в формате XLSX...');
         });
-
-
-        // УЛУЧШЕННЫЙ ПЕРЕХОД: Ручной импорт (теперь ведет на 2-й шаг)
-        document.querySelectorAll('.manual-import').forEach(card => {
-            card.addEventListener('click', () => {
-                const format = card.getAttribute('data-format');
-                // Вместо простого алерта, симулируем выбор файла и переход на 2-й шаг
-                alert(`Выбран импорт файла в формате ${format}. Начинается загрузка...`);
-                window.location.href = `${FILE_UPLOAD_STEP_2_FILE}?format=${format}`;
-            });
-        });
-
-        // Клик по нижнему меню "Главный"
-        document.querySelector('.bottom-nav .nav-item:first-child').addEventListener('click', () => {
-            window.location.href = MAIN_SCREEN_FILE;
+        document.getElementById('importTxt').addEventListener('click', () => {
+            alert('Запуск импорта данных в формате TXT...');
         });
     });
 </script>
