@@ -112,16 +112,15 @@
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
             padding: 20px;
-            cursor: pointer; /* Для карточек с переходом */
+            cursor: pointer; 
         }
         
         .banner-card:active {
             background-color: #ededed;
         }
         .chart-canvas-wrapper {
-             cursor: pointer; /* Для диаграммы */
+             cursor: pointer; 
         }
-
 
         .banner-card {
             background-color: var(--bg-light-gray);
@@ -392,6 +391,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- ФАЙЛЫ ДЛЯ НАВИГАЦИИ ---
+        const MAIN_SCREEN_FILE = 'index.html'; // Главный экран теперь называется index.html
         const EXPENSES_DETAIL_FILE = 'details.html'; // Экран детализации
         const AI_RECOMMENDATIONS_FILE = 'ai-recommendations.html';
         const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
@@ -422,55 +422,43 @@
 
         // --- ЛОГИКА НАВИГАЦИИ ---
 
-        // Клик по любому элементу легенды (для перехода на details.html)
+        // Все переходы на детализацию:
         document.querySelectorAll('.legend-item').forEach(item => {
              item.addEventListener('click', () => {
                  window.location.href = EXPENSES_DETAIL_FILE;
              });
         });
-        
-        // Клик по самой Диаграмме (для перехода на details.html)
         document.getElementById('expenseChart').addEventListener('click', () => {
              window.location.href = EXPENSES_DETAIL_FILE; 
         });
-
-        // Таб "Расходы" (Переход на Детализацию)
         document.getElementById('expensesTab').addEventListener('click', () => {
             window.location.href = EXPENSES_DETAIL_FILE; 
         });
-
-        // Карточка "Семейная аналитика" (Переход на Детализацию)
         document.getElementById('familyAnalyticsCard').addEventListener('click', () => {
              window.location.href = EXPENSES_DETAIL_FILE; 
         });
         
-        // Иконка Настройки (шестеренка)
+        // Другие переходы
         document.getElementById('settingsIcon').addEventListener('click', () => {
              window.location.href = SETTINGS_FAMILY_FILE; 
         });
-        
-        // Иконка Редактирования (Карандаш)
         document.getElementById('editFamilyButton').addEventListener('click', () => {
              window.location.href = SETTINGS_FAMILY_FILE; 
         });
-        
-        // Иконка Скачивания (переход на Импорт/Источники)
         document.getElementById('importDataButton').addEventListener('click', () => {
              window.location.href = IMPORT_EXPORT_FILE; 
         });
         
-        // Кнопка Назад (вверху слева)
+        // Кнопка Назад (вверху слева) - в рамках прототипа просто перезагружает страницу (index.html)
         document.querySelector('.back-button').addEventListener('click', () => {
              window.location.reload(); 
         });
         
-        // Таб "Вся аналитика" (Остаемся на Главном)
+        // Табы
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
              document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
              document.getElementById('allAnalyticsTab').classList.add('active');
         });
-        
-        // Таб "Доходы"
         document.getElementById('incomeTab').addEventListener('click', () => {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById('incomeTab').classList.add('active');
