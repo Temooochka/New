@@ -8,7 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* CSS СТИЛИ - (Тот же код, что и ранее) */
+        /* CSS СТИЛИ (Весь ваш предыдущий CSS) */
+
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -179,6 +180,7 @@
         .chart-canvas-wrapper {
             max-width: 250px;
             margin: 0 auto 10px auto;
+            cursor: pointer; /* Делаем область графика кликабельной */
         }
 
         .chart-footer {
@@ -200,6 +202,7 @@
             margin-bottom: 12px;
             font-size: 16px;
             line-height: 1.2;
+            cursor: pointer; /* Делаем легенду кликабельной */
         }
         .color-swatch {
             display: inline-block;
@@ -274,6 +277,7 @@
         .active-nav i, .active-nav span:not(.badge) { 
             color: var(--alfa-red);
         }
+        /* Конец CSS */
     </style>
 </head>
 <body>
@@ -326,10 +330,10 @@
             </div>
             
             <div class="chart-footer">
-                <ul class="legend">
-                    <li class="legend-item"><span class="color-swatch c1"></span>Ребенок</li>
-                    <li class="legend-item"><span class="color-swatch c2"></span><span class="bold">Родитель #1</span></li>
-                    <li class="legend-item"><span class="color-swatch c3"></span><span class="bold">Родитель #2</span></li>
+                <ul class="legend" id="chartLegend">
+                    <li class="legend-item" data-member="Ребенок"><span class="color-swatch c1"></span>Ребенок</li>
+                    <li class="legend-item" data-member="Родитель #1"><span class="color-swatch c2"></span><span class="bold">Родитель #1</span></li>
+                    <li class="legend-item" data-member="Родитель #2"><span class="color-swatch c3"></span><span class="bold">Родитель #2</span></li>
                 </ul>
 
                 <div class="actions">
@@ -376,54 +380,82 @@
 </div>
 
 <script>
+    const MAIN_SCREEN_FILE = 'index.html';
+    const DETAIL_SCREEN_FILE = 'expenses-detail.html';
+
     document.addEventListener('DOMContentLoaded', () => {
-        // Логика для графика на текущей странице (Вся аналитика)
-        const ctx = document.getElementById('expenseChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Ребенок', 'Родитель #1', 'Родитель #2'], 
-                datasets: [{
-                    data: [15, 30, 55], 
-                    backgroundColor: ['#801818', '#C02929', '#E04444'],
-                    borderWidth: 0,
-                    hoverOffset: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                aspectRatio: 1, 
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false }
+        let expenseChart;
+
+        // Инициализация графика
+        const initChart = () => {
+            const ctx = document.getElementById('expenseChart').getContext('2d');
+            expenseChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Ребенок', 'Родитель #1', 'Родитель #2'], 
+                    datasets: [{
+                        data: [15, 30, 55], 
+                        backgroundColor: ['#801818', '#C02929', '#E04444'],
+                        borderWidth: 0,
+                        hoverOffset: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    aspectRatio: 1, 
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    onClick: handleChartClick // Добавляем обработчик клика по графику
                 }
+            });
+        }
+
+        // 🚀 НОВАЯ ЛОГИКА: ОБРАБОТКА КЛИКА ПО СЕГМЕНТУ ГРАФИКА
+        const handleChartClick = (event, elements, chart) => {
+            if (elements.length > 0) {
+                const clickedIndex = elements[0].index;
+                const member = chart.data.labels[clickedIndex];
+                
+                // Перенаправление с параметром в URL для загрузки нужных данных на экране детализации
+                window.location.href = `${DETAIL_SCREEN_FILE}?member=${encodeURIComponent(member)}`;
             }
+        };
+        
+        // 🚀 НОВАЯ ЛОГИКА: ОБРАБОТКА КЛИКА ПО ЭЛЕМЕНТУ ЛЕГЕНДЫ
+        document.querySelectorAll('.legend-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const member = item.getAttribute('data-member');
+                window.location.href = `${DETAIL_SCREEN_FILE}?member=${encodeURIComponent(member)}`;
+            });
         });
 
-        // ЛОГИКА ПЕРЕХОДА НА expenses-detail.html (ОБНОВЛЕНИЕ!)
+
+        // ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТАБОВ
         const expensesTab = document.getElementById('expensesTab');
         expensesTab.addEventListener('click', () => {
-            window.location.href = 'expenses-detail.html'; // НОВОЕ ИМЯ ФАЙЛА
+            // Переход на страницу детализации без конкретного члена семьи (общий вид)
+            window.location.href = DETAIL_SCREEN_FILE; 
         });
 
-        // Клик на активную вкладку "Вся аналитика" (остаемся здесь)
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
              document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
              document.getElementById('allAnalyticsTab').classList.add('active');
         });
         
-        // Вкладка "Доходы"
         document.getElementById('incomeTab').addEventListener('click', () => {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById('incomeTab').classList.add('active');
             alert('Экран доходов еще не разработан.');
         });
         
-        // Кнопка назад на первом экране
         document.querySelector('.back-button').addEventListener('click', () => {
              alert('Переход на Главный экран банка');
         });
 
+        // Запуск инициализации
+        initChart();
     });
 </script>
 </body>
