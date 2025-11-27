@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рекомендации ИИ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* CSS Стили для нового экрана */
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+        }
+
+        :root {
+            --alfa-red: #EE3124;
+            --text-color: #333;
+            --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --bg-light-gray: #F7F7F7;
+        }
+
+        .app-screen {
+            width: 100%;
+            max-width: 390px;
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        /* Шапка */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 25px 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .status-icons i { margin-left: 5px; }
+
+        .header-nav {
+            padding: 0 20px;
+        }
+
+        .back-settings {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 15px;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+
+        /* Контент */
+        .content {
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+        
+        .card:active {
+            background-color: #eee;
+        }
+
+        /* Заголовок (Рекомендации ИИ) */
+        .ai-header-card {
+            background-color: var(--bg-light-gray);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+        }
+
+        .ai-header-card h3 {
+            font-size: 18px; 
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .ai-header-card p {
+            font-size: 14px;
+            margin: 0;
+            color: #666;
+            font-weight: 400;
+        }
+        
+        /* Карточки рекомендаций */
+        .recommendation-card {
+            background-color: var(--bg-light-gray);
+            display: flex;
+            align-items: flex-start;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .recommendation-card p {
+            font-size: 15px;
+            line-height: 1.4;
+            margin: 0;
+            padding-right: 15px;
+            flex-grow: 1;
+        }
+
+        .recommendation-card i {
+            font-size: 14px;
+            color: #333;
+            padding-top: 2px;
+            margin-right: 10px;
+        }
+        
+        .recommendation-card .alfa-icon-a {
+            align-self: flex-end;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            margin-left: auto;
+        }
+
+        /* Блок чата внизу */
+        .chat-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .chat-text {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .chat-text .arrow-right {
+            font-size: 20px;
+            line-height: 0;
+            margin-left: 10px;
+            margin-right: 15px;
+        }
+
+        .ai-button {
+            background: linear-gradient(90deg, #F06E66, var(--alfa-red));
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 18px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .ai-button i {
+            font-size: 10px;
+            margin-left: 5px;
+            color: white;
+        }
+
+
+        /* Нижнее меню (скопировано с главного) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 390px;
+            height: 70px;
+            background-color: white;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 5px; 
+            font-size: 11px;
+            color: #888;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            font-weight: 500;
+        }
+        .nav-item i {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+        .badge {
+            position: absolute;
+            top: 0px; 
+            right: 50%;
+            transform: translateX(120%);
+            background-color: var(--alfa-red);
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            width: 15px;
+            height: 15px;
+            line-height: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .active-nav i, .active-nav span:not(.badge) { 
+            color: var(--alfa-red);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-screen">
+    
+    <div class="top-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-three-quarters"></i>
+        </div>
+    </div>
+
+    <header class="header-nav">
+        <div class="back-settings">
+            <i class="fas fa-chevron-left back-button"></i>
+            <i class="fas fa-sliders-h settings-icon"></i>
+        </div>
+        
+        <div class="month-selector">
+            <h1>Октябрь</h1>
+            <div class="arrows">
+                <i class="fas fa-chevron-left disabled-arrow"></i>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab" id="expensesTab">Расходы</button>
+            <button class="tab" id="incomeTab">Доходы</button>
+            <button class="tab active" id="allAnalyticsTab">Вся аналитика</button>
+        </div>
+    </header>
+
+    <main class="content">
+
+        <div class="card ai-header-card">
+            <h3>Рекомендации ИИ</h3>
+            <p>На базе семейных расходов</p>
+        </div>
+
+        <div class="recommendation-card">
+            <i class="fas fa-chevron-right"></i>
+            <p>В этом месяце **расходы на доставку готовой еды выросли на 20%** Установим лимиты на данную категорию?</p>
+        </div>
+
+        <div class="recommendation-card">
+            <i class="fas fa-chevron-right"></i>
+            <p>Обнаружены списания по двум стриминговым сервисам **Уберем один?**</p>
+        </div>
+
+        <div class="recommendation-card">
+            <i class="fas fa-chevron-right"></i>
+            <p>**Ребенок потратил на 50% больше** относительно прошлого месяца на категорию "фастфуд" Установим лимиты на данную категорию?</p>
+            <div class="alfa-icon-a">A</div>
+        </div>
+
+        <div class="card chat-block">
+            <div class="chat-text">
+                Открыть чат <span class="arrow-right">→</span>
+            </div>
+            <button class="ai-button">Альфа-ИИ<i class="fas fa-plus-circle"></i></button>
+        </div>
+
+    </main>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active-nav">
+            <i class="fas fa-home"></i>
+            <span>Главный</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-credit-card"></i>
+            <span class="badge one">1</span>
+            <span>Платежи</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Выгода</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>История</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-comment-dots"></i>
+            <span class="badge four">4</span>
+            <span>Чаты</span>
+        </div>
+    </nav>
+</div>
+
+<script>
+    const MAIN_SCREEN_FILE = 'index.html';
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Кнопка Назад (возврат на главный экран)
+        document.querySelector('.back-button').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE;
+        });
+
+        // Логика клика по карточкам рекомендаций
+        document.querySelectorAll('.recommendation-card').forEach(card => {
+            card.addEventListener('click', () => {
+                alert(`Переход в чат для обсуждения рекомендации: ${card.querySelector('p').textContent.substring(0, 30)}...`);
+            });
+        });
+        
+        // Клик по блоку чата
+        document.querySelector('.chat-block').addEventListener('click', () => {
+             alert('Переход в чат с Альфа-ИИ.');
+        });
+        
+        // Клик по вкладкам (возврат на главный)
+        document.getElementById('expensesTab').addEventListener('click', () => {
+             window.location.href = 'expenses-detail.html';
+        });
+        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE;
+        });
+    });
+</script>
+</body>
+</html>
