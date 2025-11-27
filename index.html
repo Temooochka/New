@@ -154,6 +154,7 @@
 
         .ai-card {
             padding: 15px 20px;
+            cursor: pointer;
         }
         .ai-button {
             background: linear-gradient(90deg, #F06E66, var(--alfa-red));
@@ -338,7 +339,8 @@
 
                 <div class="actions">
                     <i class="fas fa-pencil-alt"></i>
-                    <i class="fas fa-download"></i> </div>
+                    <i class="fas fa-download"></i>
+                </div>
             </div>
         </div>
 
@@ -380,7 +382,9 @@
 
 <script>
     const DETAIL_SCREEN_FILE = 'expenses-detail.html';
-    
+    const IMPORT_EXPORT_SCREEN_FILE = 'import-export.html'; // Добавляем константу для файла импорта/экспорта
+    const AI_RECOMMENDATIONS_SCREEN_FILE = 'ai-recommendations.html'; // Добавляем константу для файла ИИ
+
     document.addEventListener('DOMContentLoaded', () => {
         let expenseChart;
 
@@ -427,10 +431,21 @@
             });
         });
 
-        // 🚀 НОВАЯ ЛОГИКА: Переход на экран Импорта/Экспорта
+        // ЛОГИКА ПЕРЕХОДА НА ИМПОРТ/ЭКСПОРТ (Иконка загрузки)
         const downloadIcon = document.querySelector('.chart-footer .actions .fa-download');
         downloadIcon.addEventListener('click', () => {
-            window.location.href = 'import-export.html'; // Переход на новый файл
+            window.location.href = IMPORT_EXPORT_SCREEN_FILE;
+        });
+
+        // 🚀 НОВАЯ ЛОГИКА: Переход на экран Рекомендаций ИИ (Кнопка "Альфа-ИИ" и ее карточка)
+        const aiCard = document.querySelector('.ai-card');
+        aiCard.addEventListener('click', () => {
+            window.location.href = AI_RECOMMENDATIONS_SCREEN_FILE;
+        });
+        const aiButton = document.querySelector('.ai-button'); // Для дополнительной кликабельности
+        aiButton.addEventListener('click', (e) => {
+             e.stopPropagation(); // Предотвращаем двойной вызов, если кликнули по кнопке внутри карточки
+             window.location.href = AI_RECOMMENDATIONS_SCREEN_FILE;
         });
 
 
