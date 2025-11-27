@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройка семьи</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Общие стили */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+        }
+
+        :root {
+            --alfa-red: #EE3124;
+            --text-color: #333;
+            --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --bg-light-gray: #F7F7F7;
+        }
+
+        .app-screen {
+            width: 100%;
+            max-width: 390px;
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 25px 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .header-nav {
+            padding: 0 20px;
+        }
+
+        .back-settings {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 15px;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+        
+        .content {
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .detail-header-card {
+            background-color: var(--bg-light-gray);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+        }
+        .detail-header-card h3 {
+            font-size: 22px; 
+            margin: 0;
+            font-weight: 700;
+        }
+        .detail-header-card p {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Настройка членов семьи */
+        .member-settings-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .member-settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .member-swatch {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .c1 { background-color: #801818; }
+        .c2 { background-color: #C02929; }
+        .c3 { background-color: #E04444; }
+
+        .name-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .save-button {
+            background-color: var(--alfa-red);
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.1s;
+        }
+        .save-button:active {
+            background-color: #d12c22;
+        }
+        
+        .delete-icon {
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.1s;
+        }
+        .delete-icon:hover {
+            color: var(--alfa-red);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="app-screen">
+    
+    <div class="top-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-three-quarters"></i>
+        </div>
+    </div>
+
+    <header class="header-nav">
+        <div class="back-settings">
+            <i class="fas fa-chevron-left back-button"></i>
+        </div>
+    </header>
+
+    <main class="content">
+
+        <div class="card detail-header-card">
+            <h3>Настройка семьи</h3>
+            <p>Переименуйте членов семьи для удобной аналитики</p>
+        </div>
+
+        <div class="card">
+            <div class="member-settings-item">
+                <span class="member-swatch c1"></span>
+                <input type="text" class="name-input" value="Ребенок" data-member-id="1">
+                <i class="fas fa-trash-alt delete-icon"></i>
+            </div>
+            
+            <div class="member-settings-item">
+                <span class="member-swatch c2"></span>
+                <input type="text" class="name-input" value="Родитель #1" data-member-id="2">
+                <i class="fas fa-trash-alt delete-icon"></i>
+            </div>
+            
+            <div class="member-settings-item">
+                <span class="member-swatch c3"></span>
+                <input type="text" class="name-input" value="Родитель #2" data-member-id="3">
+                <i class="fas fa-trash-alt delete-icon"></i>
+            </div>
+            
+            <button class="save-button" id="saveSettings">Сохранить изменения</button>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    // Укажите имя вашего основного файла
+    const MAIN_SCREEN_FILE = 'Аналитика расходов (Основной экран).html'; 
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Кнопка Назад (возврат на главный экран)
+        document.querySelector('.back-button').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE;
+        });
+
+        // Кнопка Сохранить
+        document.getElementById('saveSettings').addEventListener('click', () => {
+            const inputs = document.querySelectorAll('.name-input');
+            const newNames = Array.from(inputs).map(input => input.value);
+            
+            alert(`Имена сохранены: ${newNames.join(', ')}. Приложение обновит аналитику.`);
+
+            // Возврат на главный экран
+            window.location.href = MAIN_SCREEN_FILE;
+        });
+        
+        // Логика удаления (симуляция)
+        document.querySelectorAll('.delete-icon').forEach(icon => {
+             icon.addEventListener('click', (e) => {
+                 const itemName = e.target.closest('.member-settings-item').querySelector('.name-input').value;
+                 if (confirm(`Вы уверены, что хотите удалить ${itemName}?`)) {
+                    e.target.closest('.member-settings-item').remove();
+                    alert(`${itemName} удален. Нажмите "Сохранить", чтобы применить.`);
+                 }
+             });
+        });
+
+    });
+</script>
+</body>
+</html>
