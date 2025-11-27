@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* =================== CSS СТИЛИ =================== */
+        /* CSS СТИЛИ - (Используем ваш предыдущий CSS и стили детализации) */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -313,18 +313,17 @@
     <main class="content">
 
         <div class="card banner-card">
-            <h3>Детализация расходов</h3>
+            <h3 id="detailHeader">Детализация расходов</h3>
         </div>
 
-        
-        <div class="card detail-card" id="childCard">
+        <div class="card detail-card" id="РебенокCard" data-member="Ребенок" style="display: none;">
             <div class="detail-card-header">
                 <span class="color-swatch c1"></span>
                 <h3>Ребенок</h3>
             </div>
             <div class="detail-chart-row">
                 <div class="detail-chart-wrapper">
-                    <canvas id="childChart"></canvas>
+                    <canvas id="РебенокChart"></canvas>
                     <div class="chart-numbers">
                         <div class="num-10">10</div>
                         <div class="num-14">14</div>
@@ -343,14 +342,14 @@
         </div>
 
         
-        <div class="card detail-card" id="parent1Card">
+        <div class="card detail-card" id="Родитель #1Card" data-member="Родитель #1" style="display: none;">
             <div class="detail-card-header">
                 <span class="color-swatch c2"></span>
                 <h3>Родитель #1</h3>
             </div>
             <div class="detail-chart-row">
                 <div class="detail-chart-wrapper">
-                    <canvas id="parent1Chart"></canvas>
+                    <canvas id="Родитель #1Chart"></canvas>
                     <div class="chart-numbers">
                         <div class="num-10">10</div>
                         <div class="num-14">14</div>
@@ -369,14 +368,14 @@
         </div>
 
         
-        <div class="card detail-card" id="parent2Card">
+        <div class="card detail-card" id="Родитель #2Card" data-member="Родитель #2" style="display: none;">
             <div class="detail-card-header">
                 <span class="color-swatch c3"></span>
                 <h3>Родитель #2</h3>
             </div>
             <div class="detail-chart-row">
                 <div class="detail-chart-wrapper">
-                    <canvas id="parent2Chart"></canvas>
+                    <canvas id="Родитель #2Chart"></canvas>
                     <div class="chart-numbers">
                         <div class="num-10">10</div>
                         <div class="num-14">14</div>
@@ -392,6 +391,10 @@
                     <li class="detail-legend-item"><span class="detail-legend-swatch d-c4"></span>Отдых</li>
                 </ul>
             </div>
+        </div>
+
+        <div class="card banner-card" id="allDetailsCard" style="display: none;">
+            <h3>Выберите члена семьи на главном экране</h3>
         </div>
 
     </main>
@@ -423,6 +426,8 @@
 </div>
 
 <script>
+    const MAIN_SCREEN_FILE = 'index.html';
+    
     document.addEventListener('DOMContentLoaded', () => {
 
         const chartColors = ['#D9443A', '#F06E66', '#FFC0B9', '#FFECEB'];
@@ -437,31 +442,78 @@
             }
         };
 
-        // Инициализация 3-х графиков
-        new Chart(document.getElementById('childChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Одежда', 'Игрушки', 'Развлечения', 'Питание'], datasets: [{ data: chartData, backgroundColor: chartColors, borderWidth: 0, hoverOffset: 0 }] }, options: chartOptions });
-        new Chart(document.getElementById('parent1Chart').getContext('2d'), { type: 'doughnut', data: { labels: ['Еда', 'Транспорт', 'Подарки', 'Развлечения'], datasets: [{ data: chartData, backgroundColor: chartColors, borderWidth: 0, hoverOffset: 0 }] }, options: chartOptions });
-        new Chart(document.getElementById('parent2Chart').getContext('2d'), { type: 'doughnut', data: { labels: ['Коммуналка', 'Продукты', 'Спорт', 'Отдых'], datasets: [{ data: chartData, backgroundColor: chartColors, borderWidth: 0, hoverOffset: 0 }] }, options: chartOptions });
+        const chartDataMap = {
+            'Ребенок': { labels: ['Одежда', 'Игрушки', 'Развлечения', 'Питание'], data: [20, 30, 25, 25] },
+            'Родитель #1': { labels: ['Еда', 'Транспорт', 'Подарки', 'Развлечения'], data: [40, 10, 5, 45] },
+            'Родитель #2': { labels: ['Коммуналка', 'Продукты', 'Спорт', 'Отдых'], data: [15, 50, 20, 15] }
+        };
+
+        // Функция для инициализации графика
+        const initializeChart = (member) => {
+            const chartConfig = chartDataMap[member];
+            if (!chartConfig) return;
+
+            const ctx = document.getElementById(`${member}Chart`).getContext('2d');
+            new Chart(ctx, { 
+                type: 'doughnut', 
+                data: { 
+                    labels: chartConfig.labels, 
+                    datasets: [{ 
+                        data: chartConfig.data, 
+                        backgroundColor: chartColors, 
+                        borderWidth: 0, 
+                        hoverOffset: 0 
+                    }] 
+                }, 
+                options: chartOptions 
+            });
+        };
+
+        // 🚀 НОВАЯ ЛОГИКА: ОПРЕДЕЛЕНИЕ КАРТОЧКИ ДЛЯ ОТОБРАЖЕНИЯ
+        const urlParams = new URLSearchParams(window.location.search);
+        const memberParam = urlParams.get('member');
+
+        if (memberParam) {
+            // Если есть параметр (клик по сегменту графика)
+            const targetCardId = `${memberParam}Card`;
+            const targetCard = document.getElementById(targetCardId);
+
+            document.getElementById('detailHeader').textContent = memberParam; // Меняем заголовок
+            
+            // Скрываем общий баннер и показываем нужную карточку
+            document.querySelector('.card.banner-card h3').style.display = 'none';
+            if (targetCard) {
+                targetCard.style.display = 'block';
+                initializeChart(memberParam); // Инициализируем график
+            } else {
+                // Если параметр есть, но карточки нет (например, ошибка)
+                document.getElementById('allDetailsCard').style.display = 'block';
+                document.getElementById('detailHeader').textContent = 'Ошибка данных';
+            }
+
+        } else {
+            // Если нет параметра (клик по вкладке "Расходы")
+            document.getElementById('allDetailsCard').style.display = 'block';
+            document.getElementById('detailHeader').textContent = 'Детализация расходов';
+        }
 
 
         // ЛОГИКА КЛИКАБЕЛЬНОСТИ
         document.querySelectorAll('.detail-card').forEach(card => {
             const title = card.querySelector('h3').textContent;
             card.addEventListener('click', () => {
-                alert(`Переход к детализированным тратам для: ${title}.`);
+                alert(`Переход к детализированным тратам по категории (пока просто alert): ${title}.`);
             });
         });
 
-        const mainScreenFile = 'index.html'; // НОВОЕ ИМЯ ГЛАВНОГО ФАЙЛА!
-
         // ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТАБОВ (ВОЗВРАТ)
-        // Переход на первый экран (Вся аналитика)
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
-             window.location.href = mainScreenFile;
+             window.location.href = MAIN_SCREEN_FILE;
         });
 
         // Переход назад на первый экран (по стрелке)
         document.querySelector('.back-button').addEventListener('click', () => {
-             window.location.href = mainScreenFile;
+             window.location.href = MAIN_SCREEN_FILE;
         });
         
         // Вкладка "Расходы" (остаемся здесь)
