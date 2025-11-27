@@ -9,6 +9,7 @@
 
     <style>
         /* CSS СТИЛИ (Весь ваш предыдущий CSS) */
+        /* ... (Ваш CSS код) ... */
 
         body {
             margin: 0;
@@ -180,7 +181,7 @@
         .chart-canvas-wrapper {
             max-width: 250px;
             margin: 0 auto 10px auto;
-            cursor: pointer; /* Делаем область графика кликабельной */
+            cursor: pointer; 
         }
 
         .chart-footer {
@@ -202,7 +203,7 @@
             margin-bottom: 12px;
             font-size: 16px;
             line-height: 1.2;
-            cursor: pointer; /* Делаем легенду кликабельной */
+            cursor: pointer;
         }
         .color-swatch {
             display: inline-block;
@@ -277,7 +278,6 @@
         .active-nav i, .active-nav span:not(.badge) { 
             color: var(--alfa-red);
         }
-        /* Конец CSS */
     </style>
 </head>
 <body>
@@ -338,8 +338,7 @@
 
                 <div class="actions">
                     <i class="fas fa-pencil-alt"></i>
-                    <i class="fas fa-download"></i>
-                </div>
+                    <i class="fas fa-download"></i> </div>
             </div>
         </div>
 
@@ -380,9 +379,8 @@
 </div>
 
 <script>
-    const MAIN_SCREEN_FILE = 'index.html';
     const DETAIL_SCREEN_FILE = 'expenses-detail.html';
-
+    
     document.addEventListener('DOMContentLoaded', () => {
         let expenseChart;
 
@@ -407,23 +405,21 @@
                         legend: { display: false },
                         tooltip: { enabled: false }
                     },
-                    onClick: handleChartClick // Добавляем обработчик клика по графику
+                    onClick: handleChartClick
                 }
             });
         }
 
-        // 🚀 НОВАЯ ЛОГИКА: ОБРАБОТКА КЛИКА ПО СЕГМЕНТУ ГРАФИКА
+        // Логика клика по сегменту графика
         const handleChartClick = (event, elements, chart) => {
             if (elements.length > 0) {
                 const clickedIndex = elements[0].index;
                 const member = chart.data.labels[clickedIndex];
-                
-                // Перенаправление с параметром в URL для загрузки нужных данных на экране детализации
                 window.location.href = `${DETAIL_SCREEN_FILE}?member=${encodeURIComponent(member)}`;
             }
         };
         
-        // 🚀 НОВАЯ ЛОГИКА: ОБРАБОТКА КЛИКА ПО ЭЛЕМЕНТУ ЛЕГЕНДЫ
+        // Логика клика по элементу легенды
         document.querySelectorAll('.legend-item').forEach(item => {
             item.addEventListener('click', () => {
                 const member = item.getAttribute('data-member');
@@ -431,11 +427,16 @@
             });
         });
 
+        // 🚀 НОВАЯ ЛОГИКА: Переход на экран Импорта/Экспорта
+        const downloadIcon = document.querySelector('.chart-footer .actions .fa-download');
+        downloadIcon.addEventListener('click', () => {
+            window.location.href = 'import-export.html'; // Переход на новый файл
+        });
+
 
         // ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТАБОВ
         const expensesTab = document.getElementById('expensesTab');
         expensesTab.addEventListener('click', () => {
-            // Переход на страницу детализации без конкретного члена семьи (общий вид)
             window.location.href = DETAIL_SCREEN_FILE; 
         });
 
