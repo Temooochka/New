@@ -314,8 +314,7 @@
         
         <div class="tabs">
             <button class="tab" id="expensesTab">Расходы</button>
-            <button class="tab" id="incomeTab">Доходы</button>
-            <button class="tab active" id="allAnalyticsTab">Вся аналитика</button>
+            <button class="tab" id="incomeTab">Доходы</button> <button class="tab active" id="allAnalyticsTab">Вся аналитика</button>
         </div>
     </header>
 
@@ -389,12 +388,13 @@
         // --- ФАЙЛЫ ДЛЯ НАВИГАЦИИ и КЛЮЧ ---
         const MAIN_SCREEN_FILE = 'index.html'; 
         const EXPENSES_DETAIL_FILE = 'details.html'; 
+        const INCOME_FILE = 'income.html'; // НОВЫЙ ФАЙЛ ДОХОДОВ
         const AI_RECOMMENDATIONS_FILE = 'ai-recommendations.html';
         const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
         const IMPORT_EXPORT_FILE = 'import-export.html'; 
         const MEMBER_NAMES_KEY = 'familyMemberNames';
 
-        // --- ИНИЦИАЛИЗАЦИЯ ИМЕН ---
+        // --- ИНИЦИАЛИЗАЦИЯ ИМЕН (Чтение из localStorage) ---
         // Устанавливаем дефолтные имена, если их нет в localStorage
         if (!localStorage.getItem(MEMBER_NAMES_KEY)) {
             const defaultNames = {
@@ -440,9 +440,9 @@
             }
         });
 
-        // --- ЛОГИКА НАВИГАЦИИ ---
+        // --- ЛОГИКА НАВИГАЦИИ (ОБНОВЛЕННАЯ) ---
 
-        // Переходы на Детализацию (details.html):
+        // Переходы на Детализацию расходов (details.html)
         document.querySelectorAll('.legend-item').forEach(item => {
              item.addEventListener('click', () => {
                  window.location.href = EXPENSES_DETAIL_FILE;
@@ -458,6 +458,11 @@
              window.location.href = EXPENSES_DETAIL_FILE; 
         });
 
+        // ПЕРЕХОД НА ЭКРАН ДОХОДОВ (income.html)
+        document.getElementById('incomeTab').addEventListener('click', () => {
+            window.location.href = INCOME_FILE; 
+        });
+        
         // ПЕРЕХОД НА НАСТРОЙКИ (settings-family.html)
         document.getElementById('settingsIcon').addEventListener('click', () => {
              window.location.href = SETTINGS_FAMILY_FILE; 
@@ -486,14 +491,9 @@
         });
         
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
+             // Остаемся на этой странице, делаем активным таб
              document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
              document.getElementById('allAnalyticsTab').classList.add('active');
-        });
-        
-        document.getElementById('incomeTab').addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById('incomeTab').classList.add('active');
-            alert('Экран доходов еще не разработан.');
         });
         
         document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
