@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналитика доходов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <style>
+        /* Общие CSS Стили */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+        }
+
+        :root {
+            --alfa-red: #EE3124;
+            --income-main: #34A853; /* Зеленый для Доходов */
+            --income-c1: #1B5E20; 
+            --income-c2: #4CAF50; 
+            --income-c3: #81C784; 
+            --bg-light-gray: #F7F7F7;
+            --text-color: #333;
+            --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .app-screen {
+            width: 100%;
+            max-width: 390px;
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 25px 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .status-icons i { margin-left: 5px; }
+
+        .header-nav {
+            padding: 0 20px;
+        }
+
+        .back-settings {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 15px;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+        .settings-icon {
+            transform: rotate(90deg);
+            cursor: pointer;
+        }
+        .back-button {
+            cursor: pointer;
+        }
+
+        .month-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+        }
+        .month-selector h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+        }
+        .month-selector .arrows i {
+            font-size: 14px;
+            padding-left: 10px;
+            cursor: pointer;
+        }
+        .disabled-arrow {
+            color: #ccc;
+            cursor: default;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+        .tab {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 18px;
+            background-color: #f0f0f0;
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .tab.active {
+            background-color: #000;
+            color: white;
+        }
+
+        .content {
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .chart-card {
+            padding: 20px 20px 10px 20px;
+            text-align: center;
+        }
+        .chart-card h2 {
+             font-size: 20px;
+             font-weight: 600;
+             margin: 0 0 15px 0;
+             text-align: left;
+        }
+
+        .chart-canvas-wrapper {
+            max-width: 250px;
+            margin: 0 auto 10px auto;
+        }
+
+        .chart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 10px;
+        }
+
+        .legend {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+            line-height: 1.2;
+        }
+        .color-swatch {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .i1 { background-color: var(--income-c1); }
+        .i2 { background-color: var(--income-c2); }
+        .i3 { background-color: var(--income-c3); }
+        .bold { font-weight: 700; }
+
+        .total-income-card {
+             background-color: var(--bg-light-gray);
+             padding: 15px 20px;
+        }
+        .total-income-card h3 {
+             font-size: 18px;
+             font-weight: 600;
+             margin: 0 0 5px 0;
+        }
+        .total-income-card p {
+             font-size: 28px;
+             font-weight: 700;
+             color: var(--income-main);
+             margin: 0;
+        }
+
+        /* Нижнее меню */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 390px;
+            height: 70px;
+            background-color: white;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 5px; 
+            font-size: 11px;
+            color: #888;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            font-weight: 500;
+        }
+        .nav-item i {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        .active-nav i, .active-nav span:not(.badge) { 
+            color: var(--alfa-red);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-screen">
+    
+    <div class="top-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-three-quarters"></i>
+        </div>
+    </div>
+
+    <header class="header-nav">
+        <div class="back-settings">
+            <i class="fas fa-chevron-left back-button" id="backButton"></i>
+            <i class="fas fa-sliders-h settings-icon"></i>
+        </div>
+        
+        <div class="month-selector">
+            <h1>Октябрь</h1>
+            <div class="arrows">
+                <i class="fas fa-chevron-left disabled-arrow"></i>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab" id="expensesTab">Расходы</button>
+            <button class="tab active" id="incomeTab">Доходы</button> 
+            <button class="tab" id="allAnalyticsTab">Вся аналитика</button>
+        </div>
+    </header>
+
+    <main class="content">
+        
+        <div class="card total-income-card">
+            <h3>Общий доход за Октябрь</h3>
+            <p>150 000 ₽</p>
+        </div>
+
+        <div class="card chart-card">
+            <h2>Источники дохода</h2>
+            <div class="chart-canvas-wrapper">
+                <canvas id="incomeChart"></canvas>
+            </div>
+            
+            <div class="chart-footer">
+                <ul class="legend">
+                    <li class="legend-item"><span class="color-swatch i1"></span><span class="bold">Зарплата (Папа)</span></li>
+                    <li class="legend-item"><span class="color-swatch i2"></span>Зарплата (Мама)</li>
+                    <li class="legend-item"><span class="color-swatch i3"></span>Кэшбэк/Прочее</li>
+                </ul>
+
+                <div class="actions">
+                    <i class="fas fa-download"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card total-income-card" style="background-color: white;">
+            <h3>Дополнительная статистика</h3>
+            <p style="font-size: 16px; color: #666; font-weight: 500;">Самый крупный источник: Зарплата (Папа)</p>
+            <p style="font-size: 16px; color: #666; font-weight: 500;">Поступлений за месяц: 4</p>
+        </div>
+
+    </main>
+
+    <nav class="bottom-nav">
+        <div class="nav-item main-nav active-nav">
+            <i class="fas fa-home"></i>
+            <span>Главный</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-credit-card"></i>
+            <span class="badge one">1</span>
+            <span>Платежи</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Выгода</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>История</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-comment-dots"></i>
+            <span class="badge four">4</span>
+            <span>Чаты</span>
+        </div>
+    </nav>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const MAIN_SCREEN_FILE = 'index.html'; 
+        const EXPENSES_DETAIL_FILE = 'details.html'; 
+
+        // 1. Инициализация графика Доходов
+        const ctx = document.getElementById('incomeChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Зарплата (Папа)', 'Зарплата (Мама)', 'Кэшбэк/Прочее'], 
+                datasets: [{
+                    data: [60, 30, 10], // Примерные проценты
+                    backgroundColor: ['#1B5E20', '#4CAF50', '#81C784'],
+                    borderWidth: 0,
+                    hoverOffset: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 1, 
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                }
+            }
+        });
+
+        // 2. Обработчики навигации
+
+        // Кнопка Назад
+        document.getElementById('backButton').addEventListener('click', () => {
+            window.location.href = MAIN_SCREEN_FILE;
+        });
+        
+        // Кнопка Главный в нижнем меню
+        document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE; 
+        });
+
+        // Таб "Расходы"
+        document.getElementById('expensesTab').addEventListener('click', () => {
+            window.location.href = EXPENSES_DETAIL_FILE;
+        });
+
+        // Таб "Вся аналитика"
+        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
+            window.location.href = MAIN_SCREEN_FILE;
+        });
+        
+        // Таб "Доходы" (остаемся на этой странице)
+        document.getElementById('incomeTab').addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('incomeTab').classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>
