@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройка импорта</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Общие стили */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+        }
+
+        :root {
+            --alfa-red: #EE3124;
+            --text-color: #333;
+            --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --bg-light-gray: #F7F7F7;
+        }
+
+        .app-screen {
+            width: 100%;
+            max-width: 390px;
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            /* ... */
+        }
+
+        .header-nav {
+            padding: 0 20px;
+        }
+
+        .back-settings {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 15px;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+        .content {
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        
+        .detail-header-card {
+            background-color: var(--bg-light-gray);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+        }
+        .detail-header-card h3 {
+            font-size: 22px; 
+            margin: 0;
+            font-weight: 700;
+        }
+        .detail-header-card p {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Таблица предпросмотра */
+        .table-preview-card {
+            padding: 15px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 350px;
+        }
+        .preview-table th, .preview-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .preview-table th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        .preview-table .map-required {
+            background-color: #fef9e7;
+        }
+
+        /* Настройка колонок */
+        .mapping-section {
+            padding-top: 10px;
+        }
+        .mapping-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .mapping-item label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .mapping-item select {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            width: 55%;
+        }
+
+        .complete-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background-color: var(--alfa-red);
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.1s;
+        }
+        .complete-button:active {
+            background-color: #d12c22;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="app-screen">
+    
+    <div class="top-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-three-quarters"></i>
+        </div>
+    </div>
+
+    <header class="header-nav">
+        <div class="back-settings">
+            <i class="fas fa-chevron-left back-button"></i>
+        </div>
+    </header>
+
+    <main class="content">
+
+        <div class="card detail-header-card">
+            <h3>Шаг 2: Настройка импорта</h3>
+            <p>Сопоставьте колонки в вашем файле с нужными полями</p>
+        </div>
+        
+        <div class="card table-preview-card">
+            <p style="font-size: 14px; font-weight: 600; margin-bottom: 10px;">Предпросмотр данных</p>
+            <table class="preview-table">
+                <thead>
+                    <tr>
+                        <th class="map-required">Колонка A</th>
+                        <th class="map-required">Колонка B</th>
+                        <th>Колонка C</th>
+                        <th>Колонка D</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01.10.2023</td>
+                        <td>-5 000</td>
+                        <td>Yandex Taxi</td>
+                        <td>12:45:00</td>
+                    </tr>
+                    <tr>
+                        <td>01.10.2023</td>
+                        <td>-2 500</td>
+                        <td>Перекресток</td>
+                        <td>16:01:10</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card mapping-section">
+            <p style="font-size: 16px; font-weight: 700; margin-bottom: 20px;">Сопоставление полей:</p>
+            
+            <div class="mapping-item">
+                <label for="col-amount">Сумма операции</label>
+                <select id="col-amount">
+                    <option value="B">Колонка B (-5 000, -2 500)</option>
+                    <option value="A">Колонка A</option>
+                    <option value="C">Колонка C</option>
+                    <option value="D">Колонка D</option>
+                </select>
+            </div>
+
+            <div class="mapping-item">
+                <label for="col-date">Дата операции</label>
+                <select id="col-date">
+                    <option value="A">Колонка A (01.10.2023)</option>
+                    <option value="B">Колонка B</option>
+                    <option value="C">Колонка C</option>
+                    <option value="D">Колонка D</option>
+                </select>
+            </div>
+
+            <div class="mapping-item">
+                <label for="col-description">Название/Описание</label>
+                <select id="col-description">
+                    <option value="C">Колонка C (Yandex Taxi, Перекресток)</option>
+                    <option value="A">Колонка A</option>
+                    <option value="B">Колонка B</option>
+                    <option value="D">Колонка D</option>
+                </select>
+            </div>
+            
+            <button class="complete-button" id="completeImport">Завершить импорт и анализировать</button>
+
+        </div>
+
+    </main>
+
+    <nav class="bottom-nav">
+        </nav>
+</div>
+
+<script>
+    const IMPORT_EXPORT_FILE = 'import-export.html';
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Кнопка Назад (возврат на экран Источники данных)
+        document.querySelector('.back-button').addEventListener('click', () => {
+             window.location.href = IMPORT_EXPORT_FILE;
+        });
+
+        // Кнопка "Завершить импорт"
+        document.getElementById('completeImport').addEventListener('click', () => {
+            alert('Данные успешно импортированы и готовы к аналитике!');
+            // Перенаправление на главный экран
+            window.location.href = 'index.html';
+        });
+        
+    });
+</script>
+</body>
+</html>
