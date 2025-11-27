@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Рекомендации ИИ</title>
+    <title>Рекомендации Альфа-ИИ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* CSS Стили для нового экрана */
 
+    <style>
+        /* CSS Стили для ai-recommendations.html */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -21,7 +20,7 @@
             --alfa-red: #EE3124;
             --text-color: #333;
             --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            --bg-light-gray: #F7F7F7;
+            --ai-color: #007bff; /* Синий для ИИ */
         }
 
         .app-screen {
@@ -35,7 +34,6 @@
             overflow-x: hidden;
         }
 
-        /* Шапка */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -43,23 +41,40 @@
             font-size: 13px;
             font-weight: 600;
         }
-        .status-icons i { margin-left: 5px; }
 
         .header-nav {
             padding: 0 20px;
+            background-color: #fff;
+            padding-top: 10px;
         }
 
-        .back-settings {
+        .back-title {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
             padding-bottom: 15px;
             font-size: 18px;
             color: var(--text-color);
         }
+        .back-button { 
+            cursor: pointer;
+            margin-right: 20px;
+            font-size: 20px;
+        }
+        .screen-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--ai-color);
+            display: flex;
+            align-items: center;
+        }
+        .screen-title i {
+            margin-right: 8px;
+            color: var(--alfa-red);
+        }
 
-        /* Контент */
         .content {
-            padding: 0 20px;
+            padding: 20px;
         }
 
         .card {
@@ -68,197 +83,68 @@
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
             padding: 20px;
-            cursor: pointer;
-            transition: background-color 0.1s;
         }
         
-        .card:active {
-            background-color: #eee;
-        }
-
-        /* Заголовок (Рекомендации ИИ) */
-        .ai-header-card {
-            background-color: var(--bg-light-gray);
-            padding: 15px 20px;
-            margin-bottom: 25px;
-        }
-
-        .ai-header-card h3 {
-            font-size: 18px; 
-            margin: 0;
-            font-weight: 600;
-        }
-
-        .ai-header-card p {
+        .ai-message {
+            background-color: #f0f8ff;
+            border-left: 5px solid var(--ai-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
             font-size: 14px;
-            margin: 0;
-            color: #666;
-            font-weight: 400;
+            line-height: 1.5;
         }
-        
-        /* Карточки рекомендаций */
-        .recommendation-card {
-            background-color: var(--bg-light-gray);
+
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .recommendation-item {
             display: flex;
-            align-items: flex-start;
-            padding: 15px 20px;
-            margin-bottom: 15px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
             cursor: pointer;
         }
-
-        .recommendation-card p {
-            font-size: 15px;
-            line-height: 1.4;
-            margin: 0;
-            padding-right: 15px;
-            flex-grow: 1;
+        .recommendation-item:last-child {
+            border-bottom: none;
+        }
+        .recommendation-item:active {
+            background-color: #f9f9f9;
         }
 
-        .recommendation-card i {
-            font-size: 14px;
-            color: #333;
-            padding-top: 2px;
-            margin-right: 10px;
+        .item-info {
+            display: flex;
+            align-items: center;
         }
-        
-        .recommendation-card .alfa-icon-a {
-            align-self: flex-end;
-            width: 25px;
-            height: 25px;
-            font-size: 14px;
-            margin-left: auto;
+        .item-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             background-color: var(--alfa-red);
             color: white;
-            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: bold;
-        }
-
-        /* Блок чата внизу */
-        .chat-block {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-
-        .chat-text {
-            font-size: 17px;
-            font-weight: 600;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        .chat-text .arrow-right {
-            font-size: 20px;
-            line-height: 0;
-            margin-left: 10px;
             margin-right: 15px;
-        }
-
-        .ai-button {
-            background: linear-gradient(90deg, #F06E66, var(--alfa-red));
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 18px;
-            font-weight: 600;
             font-size: 14px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        .ai-button i {
-            font-size: 10px;
-            margin-left: 5px;
-            color: white;
         }
         
-        /* === НОВЫЕ СТИЛИ ДЛЯ СИМУЛЯТОРА === */
-        .simulator-card {
-            background: linear-gradient(135deg, #FF6F61, var(--alfa-red));
-            color: white;
-            padding: 20px;
-            margin-top: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(238, 49, 36, 0.4);
-        }
-
-        .simulator-card h4 {
-            font-size: 18px;
-            margin: 0 0 15px 0;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-        }
-        
-        .simulator-card h4 i {
-            margin-right: 10px;
-        }
-
-        .simulator-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .simulator-input-group input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
+        .item-text p {
+            margin: 0;
             font-size: 16px;
-            width: 100%;
+            font-weight: 600;
+        }
+        .item-text small {
+            font-size: 12px;
+            color: var(--ai-color);
         }
         
-        .simulator-input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+        .item-action i {
+            color: #ccc;
         }
-
-        .simulator-button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background-color: white;
-            color: var(--alfa-red);
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.1s;
-        }
-        
-        .simulator-button:active {
-            background-color: #f0f0f0;
-        }
-
-        .simulator-result {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            font-size: 15px;
-            line-height: 1.5;
-            display: none; /* Скрыто по умолчанию */
-        }
-        
-        .simulator-result p {
-            margin: 0 0 5px 0;
-        }
-        
-        .simulator-result strong {
-            color: #00ffc8; /* Яркий цвет для акцента на деньгах */
-        }
-        /* === КОНЕЦ НОВЫХ СТИЛЕЙ === */
-
 
         /* Нижнее меню */
         .bottom-nav {
@@ -278,35 +164,17 @@
             font-size: 11px;
             color: #888;
         }
+
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: pointer;
             position: relative;
-            font-weight: 500;
         }
         .nav-item i {
             font-size: 22px;
             margin-bottom: 4px;
-        }
-        .badge {
-            position: absolute;
-            top: 0px; 
-            right: 50%;
-            transform: translateX(120%);
-            background-color: var(--alfa-red);
-            color: white;
-            border-radius: 50%;
-            font-size: 10px;
-            width: 15px;
-            height: 15px;
-            line-height: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .active-nav i, .active-nav span:not(.badge) { 
-            color: var(--alfa-red);
         }
     </style>
 </head>
@@ -324,73 +192,61 @@
     </div>
 
     <header class="header-nav">
-        <div class="back-settings">
-            <i class="fas fa-chevron-left back-button"></i>
-            <i class="fas fa-sliders-h settings-icon"></i>
-        </div>
-        
-        <div class="month-selector">
-            <h1>Октябрь</h1>
-            <div class="arrows">
-                <i class="fas fa-chevron-left disabled-arrow"></i>
-                <i class="fas fa-chevron-right"></i>
-            </div>
-        </div>
-        
-        <div class="tabs">
-            <button class="tab" id="expensesTab">Расходы</button>
-            <button class="tab" id="incomeTab">Доходы</button>
-            <button class="tab active" id="allAnalyticsTab">Вся аналитика</button>
+        <div class="back-title">
+            <i class="fas fa-chevron-left back-button" id="backButton"></i>
+            <h1 class="screen-title"><i class="fas fa-robot"></i>Альфа-ИИ</h1>
         </div>
     </header>
 
     <main class="content">
-
-        <div class="card ai-header-card">
-            <h3>Рекомендации ИИ</h3>
-            <p>На базе семейных расходов</p>
-        </div>
-
-        <div class="card simulator-card">
-            <h4><i class="fas fa-calculator"></i> Симулятор бюджета (Beta)</h4>
-            <div class="simulator-input-group">
-                <input type="number" id="savingsAmount" value="5000" placeholder="Сумма экономии (₽)">
-            </div>
-            <button class="simulator-button" id="simulateButton">Посчитать прогноз</button>
+        
+        <div class="card">
+            <h2>Рекомендации на основе расходов за Октябрь</h2>
             
-            <div class="simulator-result" id="simulatorResult">
-                <p>Ваша ежемесячная экономия: <strong id="monthlySavings">5 000 ₽</strong></p>
-                <p>Потенциальный годовой доход при инвестировании: <strong id="annualReturn">62 000 ₽</strong></p>
+            <div class="ai-message">
+                **ИИ-анализ:** Расходы на транспорт у Папы значительно превышают средние. Предлагаем оптимизировать эту категорию, проверив более выгодные тарифы на топливо или парковку.
             </div>
-        </div>
 
-        <div class="recommendation-card">
-            <i class="fas fa-chevron-right"></i>
-            <p>В этом месяце **расходы на доставку готовой еды выросли на 20%** Установим лимиты на данную категорию?</p>
-        </div>
+            <ul class="recommendation-list">
+                <li class="recommendation-item">
+                    <div class="item-info">
+                        <div class="item-icon"><i class="fas fa-gas-pump"></i></div>
+                        <div class="item-text">
+                            <p>Снизить траты на бензин</p>
+                            <small>Авто - 15% от бюджета Папы</small>
+                        </div>
+                    </div>
+                    <div class="item-action"><i class="fas fa-chevron-right"></i></div>
+                </li>
 
-        <div class="recommendation-card">
-            <i class="fas fa-chevron-right"></i>
-            <p>Обнаружены списания по двум стриминговым сервисам **Уберем один?**</p>
-        </div>
+                <li class="recommendation-item">
+                    <div class="item-info">
+                        <div class="item-icon"><i class="fas fa-utensils"></i></div>
+                        <div class="item-text">
+                            <p>Ограничить фастфуд для Ребенка</p>
+                            <small>Еда вне дома - 30% от бюджета</small>
+                        </div>
+                    </div>
+                    <div class="item-action"><i class="fas fa-chevron-right"></i></div>
+                </li>
 
-        <div class="recommendation-card">
-            <i class="fas fa-chevron-right"></i>
-            <p>**Ребенок потратил на 50% больше** относительно прошлого месяца на категорию "фастфуд" Установим лимиты на данную категорию?</p>
-            <div class="alfa-icon-a">A</div>
+                <li class="recommendation-item">
+                    <div class="item-info">
+                        <div class="item-icon"><i class="fas fa-tshirt"></i></div>
+                        <div class="item-text">
+                            <p>Перейти на бюджетные бренды одежды</p>
+                            <small>Сэкономить до 10 000 ₽</small>
+                        </div>
+                    </div>
+                    <div class="item-action"><i class="fas fa-chevron-right"></i></div>
+                </li>
+            </ul>
         </div>
-
-        <div class="card chat-block">
-            <div class="chat-text">
-                Открыть чат <span class="arrow-right">→</span>
-            </div>
-            <button class="ai-button">Альфа-ИИ<i class="fas fa-plus-circle"></i></button>
-        </div>
-
+        
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item">
+        <div class="nav-item main-nav">
             <i class="fas fa-home"></i>
             <span>Главный</span>
         </div>
@@ -416,85 +272,26 @@
 </div>
 
 <script>
-    const MAIN_SCREEN_FILE = 'index.html';
-    const EXPENSES_DETAIL_FILE = 'details.html';
-
     document.addEventListener('DOMContentLoaded', () => {
+        // Константа с именем файла главного экрана
+        const MAIN_SCREEN_FILE = 'index.html'; // ИСПРАВЛЕНО: Главный экран теперь index.html
         
-        // Вспомогательная функция для форматирования числа в рубли
-        const formatRubles = (num) => {
-            return new Intl.NumberFormat('ru-RU', {
-                style: 'currency',
-                currency: 'RUB',
-                minimumFractionDigits: 0
-            }).format(num).replace(',', '.'); // Замена запятой на точку для более "банковского" вида
-        };
-
-
-        // 🚀 ЛОГИКА СИМУЛЯТОРА
-        const simulateButton = document.getElementById('simulateButton');
-        const savingsAmountInput = document.getElementById('savingsAmount');
-        const simulatorResult = document.getElementById('simulatorResult');
-        const monthlySavingsDisplay = document.getElementById('monthlySavings');
-        const annualReturnDisplay = document.getElementById('annualReturn');
-
-        simulateButton.addEventListener('click', () => {
-            const amount = parseInt(savingsAmountInput.value);
-
-            if (isNaN(amount) || amount <= 0) {
-                alert('Пожалуйста, введите корректную сумму экономии.');
-                return;
-            }
-
-            // Расчет: 
-            // 1. Годовая экономия (12 месяцев)
-            const annualSavings = amount * 12;
-            // 2. Потенциальный доход при инвестировании (допустим, 3% годовых от годовой суммы, 
-            //    но для простоты расчета возьмем фиксированный небольшой процент годовой доходности 
-            //    от общей суммы за год, что дает эффект сложного процента)
-            // Реалистичнее: 12 * (amount * 1.03) -> 3% доходности.
-            // Для "гениального" эффекта просто добавим немного сверху к годовой сумме:
-            // Возьмем 3% годовой доходности от суммы, которая была бы накоплена к концу года:
-            const simulatedReturn = annualSavings * 1.03; 
-            
-            monthlySavingsDisplay.textContent = formatRubles(amount);
-            annualReturnDisplay.textContent = formatRubles(simulatedReturn);
-
-            simulatorResult.style.display = 'block';
-            simulatorResult.scrollIntoView({ behavior: 'smooth' }); // Плавный скролл к результату
+        // 1. Кнопка Назад (стрелка влево)
+        document.getElementById('backButton').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE; 
         });
-
-
-        // --- ЛОГИКА НАВИГАЦИИ (Сохранена) ---
-
-        // Кнопка Назад (возврат на главный экран)
-        document.querySelector('.back-button').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE;
+        
+        // 2. Клик по нижнему меню (Главный)
+        document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE; 
         });
-
-        // Логика клика по карточкам рекомендаций (переход в чат)
-        document.querySelectorAll('.recommendation-card').forEach(card => {
-            card.addEventListener('click', () => {
-                alert(`Переход в чат для обсуждения рекомендации: ${card.querySelector('p').textContent.substring(0, 30)}...`);
+        
+        // Обработчик для элементов рекомендаций
+        document.querySelectorAll('.recommendation-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const recommendation = item.querySelector('p').textContent;
+                alert(`Открывается детальный план по рекомендации: "${recommendation}"`);
             });
-        });
-        
-        // Клик по блоку чата
-        document.querySelector('.chat-block').addEventListener('click', () => {
-             alert('Переход в чат с Альфа-ИИ.');
-        });
-        
-        // Клик по вкладкам (переход на соответствующие экраны)
-        document.getElementById('expensesTab').addEventListener('click', () => {
-             window.location.href = EXPENSES_DETAIL_FILE;
-        });
-        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE;
-        });
-        document.getElementById('incomeTab').addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById('incomeTab').classList.add('active');
-            alert('Экран доходов еще не разработан.');
         });
     });
 </script>
