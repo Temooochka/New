@@ -1,3 +1,4 @@
+<!DOCTYPE Posted Code>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -178,7 +179,7 @@
             margin-right: 8px;
         }
         
-        /* Цветные метки (используем градации красного для категорий) */
+        /* Цветные метки */
         .color-1 { background-color: #b22222; }
         .color-2 { background-color: #cd5c5c; }
         .color-3 { background-color: #e9967a; }
@@ -238,8 +239,7 @@
     <header class="header-nav">
         <div class="back-settings">
             <i class="fas fa-chevron-left back-button" id="backButton"></i>
-            <i class="fas fa-sliders-h settings-icon"></i>
-        </div>
+            <i class="fas fa-sliders-h settings-icon" id="settingsIcon"></i> </div>
         
         <div class="month-selector">
             <h1>Октябрь</h1>
@@ -262,7 +262,7 @@
         
         <div class="member-card">
             <div>
-                <h2>Ребенок</h2>
+                <h2>Ребенок</h2> 
                 <h3>Всего за Октябрь:</h3>
                 <p>15 000 ₽</p> 
                 
@@ -276,7 +276,7 @@
 
         <div class="member-card">
             <div>
-                <h2>Мама</h2>
+                 <h2>Мама</h2> 
                 <h3>Всего за Октябрь:</h3>
                 <p>30 000 ₽</p> 
                 
@@ -290,7 +290,7 @@
         
         <div class="member-card">
             <div>
-                <h2>Папа</h2>
+                 <h2>Папа</h2> 
                 <h3>Всего за Октябрь:</h3>
                 <p>55 000 ₽</p> 
                 
@@ -334,8 +334,21 @@
     document.addEventListener('DOMContentLoaded', () => {
         const MAIN_SCREEN_FILE = 'index.html';
         const INCOME_FILE = 'income.html'; 
+        const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
+        const MEMBER_NAMES_KEY = 'familyMemberNames';
+
+        // --- 1. ЗАГРУЗКА ИМЕН ---
+        const defaultNames = { parent1: 'Папа', parent2: 'Мама', child: 'Ребенок' };
+        const memberNames = JSON.parse(localStorage.getItem(MEMBER_NAMES_KEY)) || defaultNames;
         
-        // --- 1. ДАННЫЕ И РАСЧЕТЫ (100 000 ₽ общий расход) ---
+        // Обновление заголовков в карточках
+        // Порядок: 1й card - Page title; 2й card - Ребенок; 3й card - Мама; 4й card - Папа
+        document.querySelector('.member-card:nth-child(2) h2').textContent = memberNames.child;
+        document.querySelector('.member-card:nth-child(3) h2').textContent = memberNames.parent2;
+        document.querySelector('.member-card:nth-child(4) h2').textContent = memberNames.parent1;
+
+
+        // --- 2. ДАННЫЕ И РАСЧЕТЫ (100 000 ₽ общий расход) ---
         
         const formatRuble = (amount) => amount.toLocaleString('ru-RU') + ' ₽';
         
@@ -374,10 +387,11 @@
         };
 
         
-        // --- 2. ФУНКЦИИ ОТОБРАЖЕНИЯ ---
+        // --- 3. ФУНКЦИИ ОТОБРАЖЕНИЯ ---
 
         const createLegendItem = (category, total) => {
-            const amount = Math.round(total * category.percent / 100);
+            // Расчет суммы в рублях
+            const amount = Math.round(total * category.percent / 100); 
             return `
                 <li class="legend-item-detail">
                     <span>
@@ -410,7 +424,7 @@
                     cutout: '70%',
                     plugins: {
                         legend: { display: false },
-                        tooltip: { enabled: false } // Отключаем стандартный тултип
+                        tooltip: { enabled: false } 
                     }
                 }
             });
@@ -421,7 +435,7 @@
             legendEl.innerHTML = data.categories.map(c => createLegendItem(c, data.total)).join('');
         };
         
-        // --- 3. ИНИЦИАЛИЗАЦИЯ ---
+        // --- 4. РЕНДЕРИНГ ---
         
         renderChart('childChart', childData);
         renderLegend('childLegend', childData);
@@ -432,7 +446,7 @@
         renderChart('dadChart', dadData);
         renderLegend('dadLegend', dadData);
 
-        // --- 4. НАВИГАЦИЯ ---
+        // --- 5. НАВИГАЦИЯ ---
 
         // Кнопка Назад
         document.getElementById('backButton').addEventListener('click', () => {
@@ -442,6 +456,11 @@
         // Переход на Главный экран
         document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE; 
+        });
+
+        // Переход на Настройки
+        document.getElementById('settingsIcon').addEventListener('click', () => {
+             window.location.href = SETTINGS_FAMILY_FILE; 
         });
 
         // Таб "Доходы"
