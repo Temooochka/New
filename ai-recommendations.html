@@ -127,6 +127,13 @@
             height: 25px;
             font-size: 14px;
             margin-left: auto;
+            background-color: var(--alfa-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
         }
 
         /* Блок чата внизу */
@@ -172,9 +179,88 @@
             margin-left: 5px;
             color: white;
         }
+        
+        /* === НОВЫЕ СТИЛИ ДЛЯ СИМУЛЯТОРА === */
+        .simulator-card {
+            background: linear-gradient(135deg, #FF6F61, var(--alfa-red));
+            color: white;
+            padding: 20px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(238, 49, 36, 0.4);
+        }
+
+        .simulator-card h4 {
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .simulator-card h4 i {
+            margin-right: 10px;
+        }
+
+        .simulator-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .simulator-input-group input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .simulator-input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .simulator-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: white;
+            color: var(--alfa-red);
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+        
+        .simulator-button:active {
+            background-color: #f0f0f0;
+        }
+
+        .simulator-result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.5;
+            display: none; /* Скрыто по умолчанию */
+        }
+        
+        .simulator-result p {
+            margin: 0 0 5px 0;
+        }
+        
+        .simulator-result strong {
+            color: #00ffc8; /* Яркий цвет для акцента на деньгах */
+        }
+        /* === КОНЕЦ НОВЫХ СТИЛЕЙ === */
 
 
-        /* Нижнее меню (скопировано с главного) */
+        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -265,6 +351,19 @@
             <p>На базе семейных расходов</p>
         </div>
 
+        <div class="card simulator-card">
+            <h4><i class="fas fa-calculator"></i> Симулятор бюджета (Beta)</h4>
+            <div class="simulator-input-group">
+                <input type="number" id="savingsAmount" value="5000" placeholder="Сумма экономии (₽)">
+            </div>
+            <button class="simulator-button" id="simulateButton">Посчитать прогноз</button>
+            
+            <div class="simulator-result" id="simulatorResult">
+                <p>Ваша ежемесячная экономия: <strong id="monthlySavings">5 000 ₽</strong></p>
+                <p>Потенциальный годовой доход при инвестировании: <strong id="annualReturn">62 000 ₽</strong></p>
+            </div>
+        </div>
+
         <div class="recommendation-card">
             <i class="fas fa-chevron-right"></i>
             <p>В этом месяце **расходы на доставку готовой еды выросли на 20%** Установим лимиты на данную категорию?</p>
@@ -291,7 +390,7 @@
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item active-nav">
+        <div class="nav-item">
             <i class="fas fa-home"></i>
             <span>Главный</span>
         </div>
@@ -318,15 +417,62 @@
 
 <script>
     const MAIN_SCREEN_FILE = 'index.html';
+    const EXPENSES_DETAIL_FILE = 'details.html';
 
     document.addEventListener('DOMContentLoaded', () => {
+        
+        // Вспомогательная функция для форматирования числа в рубли
+        const formatRubles = (num) => {
+            return new Intl.NumberFormat('ru-RU', {
+                style: 'currency',
+                currency: 'RUB',
+                minimumFractionDigits: 0
+            }).format(num).replace(',', '.'); // Замена запятой на точку для более "банковского" вида
+        };
+
+
+        // 🚀 ЛОГИКА СИМУЛЯТОРА
+        const simulateButton = document.getElementById('simulateButton');
+        const savingsAmountInput = document.getElementById('savingsAmount');
+        const simulatorResult = document.getElementById('simulatorResult');
+        const monthlySavingsDisplay = document.getElementById('monthlySavings');
+        const annualReturnDisplay = document.getElementById('annualReturn');
+
+        simulateButton.addEventListener('click', () => {
+            const amount = parseInt(savingsAmountInput.value);
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Пожалуйста, введите корректную сумму экономии.');
+                return;
+            }
+
+            // Расчет: 
+            // 1. Годовая экономия (12 месяцев)
+            const annualSavings = amount * 12;
+            // 2. Потенциальный доход при инвестировании (допустим, 3% годовых от годовой суммы, 
+            //    но для простоты расчета возьмем фиксированный небольшой процент годовой доходности 
+            //    от общей суммы за год, что дает эффект сложного процента)
+            // Реалистичнее: 12 * (amount * 1.03) -> 3% доходности.
+            // Для "гениального" эффекта просто добавим немного сверху к годовой сумме:
+            // Возьмем 3% годовой доходности от суммы, которая была бы накоплена к концу года:
+            const simulatedReturn = annualSavings * 1.03; 
+            
+            monthlySavingsDisplay.textContent = formatRubles(amount);
+            annualReturnDisplay.textContent = formatRubles(simulatedReturn);
+
+            simulatorResult.style.display = 'block';
+            simulatorResult.scrollIntoView({ behavior: 'smooth' }); // Плавный скролл к результату
+        });
+
+
+        // --- ЛОГИКА НАВИГАЦИИ (Сохранена) ---
 
         // Кнопка Назад (возврат на главный экран)
         document.querySelector('.back-button').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE;
         });
 
-        // Логика клика по карточкам рекомендаций
+        // Логика клика по карточкам рекомендаций (переход в чат)
         document.querySelectorAll('.recommendation-card').forEach(card => {
             card.addEventListener('click', () => {
                 alert(`Переход в чат для обсуждения рекомендации: ${card.querySelector('p').textContent.substring(0, 30)}...`);
@@ -338,12 +484,17 @@
              alert('Переход в чат с Альфа-ИИ.');
         });
         
-        // Клик по вкладкам (возврат на главный)
+        // Клик по вкладкам (переход на соответствующие экраны)
         document.getElementById('expensesTab').addEventListener('click', () => {
-             window.location.href = 'expenses-detail.html';
+             window.location.href = EXPENSES_DETAIL_FILE;
         });
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE;
+        });
+        document.getElementById('incomeTab').addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('incomeTab').classList.add('active');
+            alert('Экран доходов еще не разработан.');
         });
     });
 </script>
