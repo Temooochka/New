@@ -8,9 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* CSS СТИЛИ (Весь ваш предыдущий CSS) */
-        /* ... (Ваш CSS код) ... */
-
+        /* CSS Стили для главного экрана */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -120,7 +118,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer; /* Сделаем карточку кликабельной */
         }
+        .banner-card:active {
+            background-color: #ededed;
+        }
+        
         .banner-text h3 {
             font-size: 16px;
             margin: 0 0 5px 0;
@@ -154,7 +157,6 @@
 
         .ai-card {
             padding: 15px 20px;
-            cursor: pointer;
         }
         .ai-button {
             background: linear-gradient(90deg, #F06E66, var(--alfa-red));
@@ -182,7 +184,6 @@
         .chart-canvas-wrapper {
             max-width: 250px;
             margin: 0 auto 10px auto;
-            cursor: pointer; 
         }
 
         .chart-footer {
@@ -204,7 +205,6 @@
             margin-bottom: 12px;
             font-size: 16px;
             line-height: 1.2;
-            cursor: pointer;
         }
         .color-swatch {
             display: inline-block;
@@ -224,7 +224,12 @@
             color: #666;
             margin-left: 20px;
             cursor: pointer;
+            transition: color 0.1s;
         }
+        .actions i:active {
+            color: var(--alfa-red);
+        }
+
 
         .bottom-nav {
             position: fixed;
@@ -317,7 +322,7 @@
 
     <main class="content">
 
-        <div class="card banner-card">
+        <div class="card banner-card" id="familyAnalyticsCard">
             <div class="banner-text">
                 <h3>Семейная аналитика расходов</h3>
                 <p>Статистика по семейным тратам <span class="arrow-right">→</span></p>
@@ -331,20 +336,18 @@
             </div>
             
             <div class="chart-footer">
-                <ul class="legend" id="chartLegend">
-                    <li class="legend-item" data-member="Ребенок"><span class="color-swatch c1"></span>Ребенок</li>
-                    <li class="legend-item" data-member="Родитель #1"><span class="color-swatch c2"></span><span class="bold">Родитель #1</span></li>
-                    <li class="legend-item" data-member="Родитель #2"><span class="color-swatch c3"></span><span class="bold">Родитель #2</span></li>
+                <ul class="legend">
+                    <li class="legend-item"><span class="color-swatch c1"></span>Ребенок</li>
+                    <li class="legend-item"><span class="color-swatch c2"></span><span class="bold">Родитель #1</span></li>
+                    <li class="legend-item"><span class="color-swatch c3"></span><span class="bold">Родитель #2</span></li>
                 </ul>
 
                 <div class="actions">
-                    <i class="fas fa-pencil-alt"></i>
-                    <i class="fas fa-download"></i>
-                </div>
+                    <i class="fas fa-pencil-alt" id="editFamilyButton"></i> <i class="fas fa-download" id="importDataButton"></i> </div>
             </div>
         </div>
 
-        <div class="card banner-card ai-card">
+        <div class="card banner-card ai-card" id="aiRecommendationsCard">
             <div class="banner-text">
                 <h3>Рекомендации ИИ</h3>
                 <p>На базе семейных расходов <span class="arrow-right">→</span></p>
@@ -381,97 +384,82 @@
 </div>
 
 <script>
-    const DETAIL_SCREEN_FILE = 'expenses-detail.html';
-    const IMPORT_EXPORT_SCREEN_FILE = 'import-export.html'; // Добавляем константу для файла импорта/экспорта
-    const AI_RECOMMENDATIONS_SCREEN_FILE = 'ai-recommendations.html'; // Добавляем константу для файла ИИ
-
     document.addEventListener('DOMContentLoaded', () => {
-        let expenseChart;
+        // --- ФАЙЛЫ ДЛЯ НАВИГАЦИИ (Соответствуют новым экранам) ---
+        const EXPENSES_DETAIL_FILE = 'details.html';
+        const AI_RECOMMENDATIONS_FILE = 'ai-recommendations.html';
+        const SETTINGS_FAMILY_FILE = 'settings-family.html'; // Экран редактирования семьи
+        const IMPORT_EXPORT_FILE = 'import-export.html'; // Экран источников данных
 
-        // Инициализация графика
-        const initChart = () => {
-            const ctx = document.getElementById('expenseChart').getContext('2d');
-            expenseChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Ребенок', 'Родитель #1', 'Родитель #2'], 
-                    datasets: [{
-                        data: [15, 30, 55], 
-                        backgroundColor: ['#801818', '#C02929', '#E04444'],
-                        borderWidth: 0,
-                        hoverOffset: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    aspectRatio: 1, 
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false }
-                    },
-                    onClick: handleChartClick
+        // --- ИНИЦИАЛИЗАЦИЯ ГРАФИКА ---
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Ребенок', 'Родитель #1', 'Родитель #2'], 
+                datasets: [{
+                    data: [15, 30, 55], // Примерные проценты расходов
+                    backgroundColor: ['#801818', '#C02929', '#E04444'],
+                    borderWidth: 0,
+                    hoverOffset: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 1, 
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
                 }
-            });
-        }
-
-        // Логика клика по сегменту графика
-        const handleChartClick = (event, elements, chart) => {
-            if (elements.length > 0) {
-                const clickedIndex = elements[0].index;
-                const member = chart.data.labels[clickedIndex];
-                window.location.href = `${DETAIL_SCREEN_FILE}?member=${encodeURIComponent(member)}`;
             }
-        };
-        
-        // Логика клика по элементу легенды
-        document.querySelectorAll('.legend-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const member = item.getAttribute('data-member');
-                window.location.href = `${DETAIL_SCREEN_FILE}?member=${encodeURIComponent(member)}`;
-            });
         });
 
-        // ЛОГИКА ПЕРЕХОДА НА ИМПОРТ/ЭКСПОРТ (Иконка загрузки)
-        const downloadIcon = document.querySelector('.chart-footer .actions .fa-download');
-        downloadIcon.addEventListener('click', () => {
-            window.location.href = IMPORT_EXPORT_SCREEN_FILE;
+        // --- ЛОГИКА НАВИГАЦИИ ---
+
+        // 1. Таб "Расходы" (Переход на Детализацию)
+        document.getElementById('expensesTab').addEventListener('click', () => {
+            window.location.href = EXPENSES_DETAIL_FILE; 
         });
 
-        // 🚀 НОВАЯ ЛОГИКА: Переход на экран Рекомендаций ИИ (Кнопка "Альфа-ИИ" и ее карточка)
-        const aiCard = document.querySelector('.ai-card');
-        aiCard.addEventListener('click', () => {
-            window.location.href = AI_RECOMMENDATIONS_SCREEN_FILE;
-        });
-        const aiButton = document.querySelector('.ai-button'); // Для дополнительной кликабельности
-        aiButton.addEventListener('click', (e) => {
-             e.stopPropagation(); // Предотвращаем двойной вызов, если кликнули по кнопке внутри карточки
-             window.location.href = AI_RECOMMENDATIONS_SCREEN_FILE;
-        });
-
-
-        // ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТАБОВ
-        const expensesTab = document.getElementById('expensesTab');
-        expensesTab.addEventListener('click', () => {
-            window.location.href = DETAIL_SCREEN_FILE; 
-        });
-
+        // 2. Таб "Вся аналитика" (Остаемся на Главном)
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
              document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
              document.getElementById('allAnalyticsTab').classList.add('active');
         });
         
+        // 3. Таб "Доходы"
         document.getElementById('incomeTab').addEventListener('click', () => {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById('incomeTab').classList.add('active');
             alert('Экран доходов еще не разработан.');
         });
         
-        document.querySelector('.back-button').addEventListener('click', () => {
-             alert('Переход на Главный экран банка');
+        // 4. Карточка "Семейная аналитика" (Переход на Детализацию)
+        document.getElementById('familyAnalyticsCard').addEventListener('click', () => {
+             window.location.href = EXPENSES_DETAIL_FILE; 
         });
 
-        // Запуск инициализации
-        initChart();
+        // 5. Иконка Редактирования (Карандаш)
+        const editFamilyButton = document.getElementById('editFamilyButton');
+        editFamilyButton.addEventListener('click', () => {
+             window.location.href = SETTINGS_FAMILY_FILE; 
+        });
+        
+        // 6. Иконка Скачивания (переход на Источники данных/Импорт)
+        document.getElementById('importDataButton').addEventListener('click', () => {
+             window.location.href = IMPORT_EXPORT_FILE; 
+        });
+        
+        // 7. Карточка "Рекомендации ИИ"
+        document.getElementById('aiRecommendationsCard').addEventListener('click', () => {
+             window.location.href = AI_RECOMMENDATIONS_FILE; 
+        });
+        
+        // 8. Кнопка Назад (вверху слева) - в рамках прототипа просто перезагружает страницу
+        document.querySelector('.back-button').addEventListener('click', () => {
+             window.location.reload(); 
+        });
+
     });
 </script>
 </body>
