@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* CSS Стили для главного экрана */
+        /* CSS Стили для главного экрана (без изменений) */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -321,7 +321,7 @@
 
     <main class="content">
 
-        <div class="card banner-card" id="familyAnalyticsCard">
+        <div class="card banner-card" id="familyAnalyticsCard"> 
             <div class="banner-text">
                 <h3>Семейная аналитика расходов</h3>
                 <p>Статистика по семейным тратам <span class="arrow-right">→</span></p>
@@ -337,10 +337,14 @@
             <div class="chart-footer">
                 <ul class="legend">
                     <li class="legend-item"><span class="color-swatch c1"></span>Ребенок</li>
-                    <li class="legend-item"><span class="color-swatch c2"></span><span class="bold">Мама</span></li> <li class="legend-item"><span class="color-swatch c3"></span><span class="bold">Папа</span></li> </ul>
+                    <li class="legend-item"><span class="color-swatch c2"></span><span class="bold">Мама</span></li> 
+                    <li class="legend-item"><span class="color-swatch c3"></span><span class="bold">Папа</span></li> 
+                </ul>
 
                 <div class="actions">
-                    <i class="fas fa-pencil-alt" id="editFamilyButton"></i> <i class="fas fa-download" id="importDataButton"></i> </div>
+                    <i class="fas fa-pencil-alt" id="editFamilyButton"></i>
+                    <i class="fas fa-download" id="importDataButton"></i>
+                </div>
             </div>
         </div>
 
@@ -383,7 +387,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- ФАЙЛЫ ДЛЯ НАВИГАЦИИ ---
-        const EXPENSES_DETAIL_FILE = 'details.html';
+        const EXPENSES_DETAIL_FILE = 'details.html'; // Экран детализации
         const AI_RECOMMENDATIONS_FILE = 'ai-recommendations.html';
         const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
         const IMPORT_EXPORT_FILE = 'import-export.html'; 
@@ -393,7 +397,6 @@
         new Chart(ctx, {
             type: 'pie',
             data: {
-                // ИЗМЕНЕНО: Обновленные метки для графика
                 labels: ['Ребенок', 'Мама', 'Папа'], 
                 datasets: [{
                     data: [15, 30, 55], // Примерные проценты расходов
@@ -412,7 +415,7 @@
             }
         });
 
-        // --- ЛОГИКА НАВИГАЦИИ (Полностью восстановлена и привязана к ID) ---
+        // --- ЛОГИКА НАВИГАЦИИ ---
 
         // 1. Таб "Расходы" (Переход на Детализацию)
         document.getElementById('expensesTab').addEventListener('click', () => {
@@ -423,13 +426,6 @@
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
              document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
              document.getElementById('allAnalyticsTab').classList.add('active');
-        });
-        
-        // 3. Таб "Доходы"
-        document.getElementById('incomeTab').addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById('incomeTab').classList.add('active');
-            alert('Экран доходов еще не разработан.');
         });
         
         // 4. Карточка "Семейная аналитика" (Переход на Детализацию)
