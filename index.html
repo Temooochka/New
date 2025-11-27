@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* CSS Стили для главного экрана (без изменений) */
+        /* CSS Стили для главного экрана */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -60,6 +60,7 @@
         }
         .settings-icon {
             transform: rotate(90deg);
+            cursor: pointer;
         }
 
         .month-selector {
@@ -111,19 +112,23 @@
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
             padding: 20px;
+            cursor: pointer; /* Для карточек с переходом */
         }
+        
+        .banner-card:active {
+            background-color: #ededed;
+        }
+        .chart-canvas-wrapper {
+             cursor: pointer; /* Для диаграммы */
+        }
+
 
         .banner-card {
             background-color: var(--bg-light-gray);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
         }
-        .banner-card:active {
-            background-color: #ededed;
-        }
-        
         .banner-text h3 {
             font-size: 16px;
             margin: 0 0 5px 0;
@@ -182,8 +187,6 @@
         }
 
         .chart-canvas-wrapper {
-            /* Добавим курсор, чтобы было понятно, что диаграмма кликабельна */
-            cursor: pointer; 
             max-width: 250px;
             margin: 0 auto 10px auto;
         }
@@ -207,6 +210,10 @@
             margin-bottom: 12px;
             font-size: 16px;
             line-height: 1.2;
+            cursor: pointer; /* Добавлено: чтобы легенда была кликабельной */
+        }
+        .legend-item:active {
+            opacity: 0.8;
         }
         .color-swatch {
             display: inline-block;
@@ -226,10 +233,6 @@
             color: #666;
             margin-left: 20px;
             cursor: pointer;
-            transition: color 0.1s;
-        }
-        .actions i:active {
-            color: var(--alfa-red);
         }
 
         .bottom-nav {
@@ -303,7 +306,7 @@
     <header class="header-nav">
         <div class="back-settings">
             <i class="fas fa-chevron-left back-button"></i>
-            <i class="fas fa-sliders-h settings-icon"></i>
+            <i class="fas fa-sliders-h settings-icon" id="settingsIcon"></i>
         </div>
         
         <div class="month-selector">
@@ -332,15 +335,15 @@
         </div>
 
         <div class="card chart-card">
-            <div class="chart-canvas-wrapper"> 
+            <div class="chart-canvas-wrapper">
                 <canvas id="expenseChart"></canvas>
             </div>
             
             <div class="chart-footer">
                 <ul class="legend">
-                    <li class="legend-item"><span class="color-swatch c1"></span>Ребенок</li>
-                    <li class="legend-item"><span class="color-swatch c2"></span><span class="bold">Мама</span></li> 
-                    <li class="legend-item"><span class="color-swatch c3"></span><span class="bold">Папа</span></li> 
+                    <li class="legend-item" data-member="Ребенок"><span class="color-swatch c1"></span>Ребенок</li>
+                    <li class="legend-item" data-member="Мама"><span class="color-swatch c2"></span><span class="bold">Мама</span></li>
+                    <li class="legend-item" data-member="Папа"><span class="color-swatch c3"></span><span class="bold">Папа</span></li>
                 </ul>
 
                 <div class="actions">
@@ -418,53 +421,48 @@
         });
 
         // --- ЛОГИКА НАВИГАЦИИ ---
-
-        // 1. Таб "Расходы" (Переход на Детализацию)
-        document.getElementById('expensesTab').addEventListener('click', () => {
-            window.location.href = EXPENSES_DETAIL_FILE; 
-        });
-
-        // 2. Таб "Вся аналитика" (Остаемся на Главном)
-        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
-             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-             document.getElementById('allAnalyticsTab').classList.add('active');
+        
+        // Клик по любому элементу легенды (для перехода на details.html)
+        document.querySelectorAll('.legend-item').forEach(item => {
+             item.addEventListener('click', () => {
+                 // Здесь в реальном приложении можно было бы передать ID члена семьи
+                 window.location.href = EXPENSES_DETAIL_FILE;
+             });
         });
         
-        // 3. Карточка "Семейная аналитика" (Переход на Детализацию)
-        document.getElementById('familyAnalyticsCard').addEventListener('click', () => {
-             window.location.href = EXPENSES_DETAIL_FILE; 
-        });
-        
-        // 🎯 ВОССТАНОВЛЕНО: Клик по самой Диаграмме
+        // Клик по самой Диаграмме (для перехода на details.html)
         document.getElementById('expenseChart').addEventListener('click', () => {
              window.location.href = EXPENSES_DETAIL_FILE; 
         });
 
-        // 4. Иконка Редактирования (Карандаш)
+        // Таб "Расходы" (Переход на Детализацию)
+        document.getElementById('expensesTab').addEventListener('click', () => {
+            window.location.href = EXPENSES_DETAIL_FILE; 
+        });
+
+        // Карточка "Семейная аналитика" (Переход на Детализацию)
+        document.getElementById('familyAnalyticsCard').addEventListener('click', () => {
+             window.location.href = EXPENSES_DETAIL_FILE; 
+        });
+        
+        // Иконка Настройки (шестеренка)
+        document.getElementById('settingsIcon').addEventListener('click', () => {
+             window.location.href = SETTINGS_FAMILY_FILE; 
+        });
+        
+        // Иконка Редактирования (Карандаш)
         document.getElementById('editFamilyButton').addEventListener('click', () => {
              window.location.href = SETTINGS_FAMILY_FILE; 
         });
         
-        // 5. Иконка Скачивания (переход на Импорт/Источники)
+        // Иконка Скачивания (переход на Импорт/Источники)
         document.getElementById('importDataButton').addEventListener('click', () => {
              window.location.href = IMPORT_EXPORT_FILE; 
         });
         
-        // 6. Карточка "Рекомендации ИИ"
-        document.getElementById('aiRecommendationsCard').addEventListener('click', () => {
-             window.location.href = AI_RECOMMENDATIONS_FILE; 
-        });
-        
-        // 7. Кнопка Назад (вверху слева)
+        // Кнопка Назад (вверху слева) - в рамках прототипа просто перезагружает страницу
         document.querySelector('.back-button').addEventListener('click', () => {
              window.location.reload(); 
-        });
-
-        // 8. Таб "Доходы"
-        document.getElementById('incomeTab').addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById('incomeTab').classList.add('active');
-            alert('Экран доходов еще не разработан.');
         });
 
     });
