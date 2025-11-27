@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Импорт и Экспорт данных</title>
+    <title>Источники данных</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* CSS Стили для нового экрана */
-
+        /* CSS Стили */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -35,7 +34,6 @@
             overflow-x: hidden;
         }
 
-        /* Шапка */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -57,7 +55,6 @@
             color: var(--text-color);
         }
 
-        /* Контент */
         .content {
             padding: 0 20px;
         }
@@ -68,7 +65,6 @@
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
             padding: 20px;
-            cursor: pointer;
             transition: background-color 0.1s;
         }
         
@@ -103,6 +99,51 @@
             color: #666;
         }
 
+        /* === БЛОК СОЕДИНЕНИЯ БАНКОВ (НОВЫЙ) === */
+        .bank-connect-card {
+            background: linear-gradient(135deg, #1080d0, #00508d);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+        .bank-connect-card h4 {
+            font-size: 17px;
+            margin: 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        .bank-connect-card h4 i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .bank-connect-card p {
+            font-size: 14px;
+            margin: 5px 0 15px 0;
+            opacity: 0.9;
+        }
+        .connect-button {
+            background-color: white;
+            color: #00508d;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        /* === КОНЕЦ БЛОКА СОЕДИНЕНИЯ БАНКОВ === */
+
+        /* Заголовок секции */
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 15px;
+            padding: 0 20px;
+        }
+
         /* Карточки форматов */
         .format-card {
             display: flex;
@@ -111,12 +152,18 @@
             padding: 15px 20px;
             margin-bottom: 15px;
             background-color: #fcfcfc;
+            cursor: pointer;
         }
 
         .format-card h3 {
             font-size: 17px;
             font-weight: 600;
             margin: 0;
+        }
+        .format-card p {
+            font-size: 13px;
+            color: #999;
+            margin: 3px 0 0 0;
         }
 
         .format-icon-wrapper {
@@ -125,17 +172,12 @@
             position: relative;
         }
 
-        /* Иконки форматов */
-        .fa-file-csv::before { content: 'CSV'; font-size: 12px; position: absolute; bottom: 8px; right: 5px; font-weight: bold; color: white; }
-        .fa-file-excel::before { content: 'XLS'; font-size: 12px; position: absolute; bottom: 8px; right: 4px; font-weight: bold; color: white; }
-        .fa-file-alt::before { content: 'TXT'; font-size: 12px; position: absolute; bottom: 8px; right: 5px; font-weight: bold; color: white; }
+        .fa-file-csv, .fa-file-excel, .fa-file-alt { 
+            color: #4CAF50; /* Зеленый цвет для файлов */
+        }
         
-        .csv-icon { color: #2ecc71; } /* Условные цвета для иконок */
-        .xls-icon { color: #27ae60; }
-        .txt-icon { color: #3498db; }
-
-        /* Нижнее меню (скопировано с главного) */
         .bottom-nav {
+            /* ... стили нижнего меню ... */
             position: fixed;
             bottom: 0;
             left: 50%;
@@ -179,9 +221,6 @@
             text-align: center;
             font-weight: bold;
         }
-        .active-nav i, .active-nav span:not(.badge) { 
-            color: var(--alfa-red);
-        }
     </style>
 </head>
 <body>
@@ -201,46 +240,60 @@
         <div class="back-settings">
             <i class="fas fa-chevron-left back-button"></i>
         </div>
-        </header>
+    </header>
 
     <main class="content">
 
         <div class="card import-banner">
             <div>
-                <h3>Импортировать данные</h3>
-                <p>В любом удобном формате</p>
+                <h3>Источники данных</h3>
+                <p>Настройте синхронизацию и импорт</p>
             </div>
-            <i class="fas fa-download"></i>
+            <i class="fas fa-database"></i>
         </div>
 
+        <div class="card bank-connect-card" id="bankConnectCard">
+            <h4><i class="fas fa-plug"></i> Автоматическая синхронизация</h4>
+            <p>Подключите счета других банков для бесшовного учета финансов.</p>
+            <button class="connect-button">Соединить другой банк</button>
+        </div>
+
+        <div class="section-title" style="padding: 0;">Ручной импорт</div>
         
-        <div class="card format-card" data-format="CSV">
-            <h3>Импорт в CSV</h3>
+        <div class="card format-card manual-import" data-format="CSV">
+            <div>
+                <h3>Импорт CSV-файла</h3>
+                <p>Подходит для большинства банковских выписок.</p>
+            </div>
             <span class="format-icon-wrapper">
-                 <i class="fas fa-file-csv csv-icon"></i> 
+                 <i class="fas fa-file-csv"></i> 
             </span>
         </div>
 
-        
-        <div class="card format-card" data-format="XLS">
-            <h3>Импорт в Xls</h3>
+        <div class="card format-card manual-import" data-format="XLS">
+            <div>
+                <h3>Импорт XLS/XLSX-файла</h3>
+                <p>Стандартный формат таблиц Excel.</p>
+            </div>
             <span class="format-icon-wrapper">
-                <i class="fas fa-file-excel xls-icon"></i>
+                <i class="fas fa-file-excel"></i>
             </span>
         </div>
 
-        
-        <div class="card format-card" data-format="TXT">
-            <h3>Импорт в TXT</h3>
+        <div class="card format-card manual-import" data-format="TXT">
+            <div>
+                <h3>Импорт TXT-файла</h3>
+                <p>Универсальный, требует ручной настройки колонок.</p>
+            </div>
             <span class="format-icon-wrapper">
-                <i class="fas fa-file-alt txt-icon"></i>
+                <i class="fas fa-file-alt"></i>
             </span>
         </div>
 
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item active-nav">
+        <div class="nav-item">
             <i class="fas fa-home"></i>
             <span>Главный</span>
         </div>
@@ -266,7 +319,9 @@
 </div>
 
 <script>
-    const MAIN_SCREEN_FILE = 'index.html'; // Ваш главный файл
+    const MAIN_SCREEN_FILE = 'index.html';
+    const BANK_CONNECT_FILE = 'bank-connect.html';
+    const FILE_UPLOAD_STEP_2_FILE = 'file-upload-step2.html'; 
 
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -275,12 +330,29 @@
              window.location.href = MAIN_SCREEN_FILE;
         });
 
-        // Логика клика по форматам
-        document.querySelectorAll('.format-card').forEach(card => {
+        // 🚀 НОВЫЙ ПЕРЕХОД: Соединить другой банк
+        document.getElementById('bankConnectCard').addEventListener('click', () => {
+            window.location.href = BANK_CONNECT_FILE;
+        });
+        document.querySelector('.connect-button').addEventListener('click', (e) => {
+            e.stopPropagation();
+            window.location.href = BANK_CONNECT_FILE;
+        });
+
+
+        // УЛУЧШЕННЫЙ ПЕРЕХОД: Ручной импорт (теперь ведет на 2-й шаг)
+        document.querySelectorAll('.manual-import').forEach(card => {
             card.addEventListener('click', () => {
                 const format = card.getAttribute('data-format');
-                alert(`Начало процесса импорта данных в формате ${format}.`);
+                // Вместо простого алерта, симулируем выбор файла и переход на 2-й шаг
+                alert(`Выбран импорт файла в формате ${format}. Начинается загрузка...`);
+                window.location.href = `${FILE_UPLOAD_STEP_2_FILE}?format=${format}`;
             });
+        });
+
+        // Клик по нижнему меню "Главный"
+        document.querySelector('.bottom-nav .nav-item:first-child').addEventListener('click', () => {
+            window.location.href = MAIN_SCREEN_FILE;
         });
     });
 </script>
