@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Настройка семьи</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
-        /* CSS Стили для settings-family.html */
+        /* Общие CSS Стили */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -18,10 +18,11 @@
 
         :root {
             --alfa-red: #EE3124;
-            --text-color: #333;
+            --main-red: #801818; 
             --bg-light-gray: #F7F7F7;
-            --input-border: #ccc;
+            --text-color: #333;
             --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --input-border: #ccc;
         }
 
         .app-screen {
@@ -45,122 +46,92 @@
 
         .header-nav {
             padding: 0 20px;
-            padding-top: 10px;
         }
 
-        .back-title {
-            display: flex;
-            align-items: center;
-            padding-bottom: 15px;
+        .back-settings {
+            padding: 10px 0 15px 0;
             font-size: 18px;
             color: var(--text-color);
         }
-        .back-button { 
+        .back-button {
             cursor: pointer;
-            margin-right: 20px;
-            font-size: 20px;
         }
-        .screen-title {
-            font-size: 20px;
+        
+        .page-title h1 {
+            font-size: 24px;
             font-weight: 700;
             margin: 0;
+            color: var(--text-color);
         }
-        .subtitle-card {
-            background-color: var(--bg-light-gray);
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            margin: 0 0 20px 0;
-            padding: 15px 20px;
-        }
-        .subtitle-card p {
+        .page-title p {
             font-size: 14px;
-            margin: 0;
             color: #666;
+            margin: 5px 0 20px 0;
         }
 
         .content {
             padding: 0 20px;
         }
-        
-        /* Стили для элементов семьи */
-        .family-member {
+
+        .input-group {
             display: flex;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .member-icon {
-            font-size: 20px;
-            color: var(--alfa-red);
-            margin-right: 15px;
-        }
-        .member-icon.child {
-            color: #34A853; /* Зеленый для ребенка */
-        }
-        .member-details {
-            flex-grow: 1;
-        }
-        .member-details input {
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            width: 90%;
-            padding: 0;
-            margin: 0;
-            background: transparent;
-        }
-        .member-details p {
-            font-size: 12px;
-            color: #999;
-            margin: 2px 0 0 0;
-        }
-        .member-actions i {
-            font-size: 18px;
-            color: var(--alfa-red);
-            margin-left: 15px;
-            cursor: pointer;
-        }
-        .member-actions .fa-trash-alt {
-            color: #999; 
+            margin-bottom: 20px;
+            background-color: var(--bg-light-gray);
+            border-radius: 10px;
+            padding: 15px;
         }
 
-        .add-member-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            margin-top: 20px;
-            background-color: #f0f0f0;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
+        .input-group i {
+            font-size: 20px;
+            margin-right: 15px;
+            color: var(--alfa-red);
+        }
+
+        .input-wrapper {
+            flex-grow: 1;
+        }
+
+        .input-wrapper label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
             color: var(--text-color);
-            border: 1px solid #ddd;
+            margin-bottom: 5px;
         }
-        .add-member-button i {
-            margin-right: 10px;
-            color: #666;
+
+        .input-wrapper input[type="text"] {
+            width: 100%;
+            padding: 5px 0;
+            border: none;
+            border-bottom: 1px solid var(--input-border);
+            background: transparent;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
         }
-        
-        /* Кнопка сохранения */
+
         .save-button {
             width: 100%;
+            padding: 15px;
             background-color: var(--alfa-red);
             color: white;
             border: none;
-            padding: 15px;
             border-radius: 12px;
             font-size: 18px;
-            font-weight: 600;
-            margin-top: 30px;
+            font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.1s;
+            margin-top: 30px;
+            transition: background-color 0.2s;
         }
-        .save-button:active {
-            background-color: #cc291f;
+        .save-button:hover {
+            background-color: #c72922;
         }
-
-        /* Нижнее меню (скопировано) */
+        
+        /* Дополнительные стили для иконок членов семьи */
+        .icon-child i { color: #34A853; } /* Зеленый для ребенка */
+        
+        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -185,28 +156,11 @@
             align-items: center;
             cursor: pointer;
             position: relative;
+            font-weight: 500;
         }
         .nav-item i {
             font-size: 22px;
             margin-bottom: 4px;
-        }
-        .badge {
-            position: absolute;
-            top: 0px; 
-            right: 50%;
-            transform: translateX(120%);
-            background-color: var(--alfa-red);
-            color: white;
-            border-radius: 50%;
-            font-size: 10px;
-            width: 15px;
-            height: 15px;
-            line-height: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .nav-item:last-child .badge { 
-            right: 20px; 
         }
     </style>
 </head>
@@ -224,61 +178,49 @@
     </div>
 
     <header class="header-nav">
-        <div class="back-title">
+        <div class="back-settings">
             <i class="fas fa-chevron-left back-button" id="backButton"></i>
-            <h1 class="screen-title">Настройки семьи</h1>
         </div>
-        <div class="subtitle-card">
-            <p>Переименуйте членов семьи для удобной аналитики</p>
+        
+        <div class="page-title">
+            <h1>Настройка семьи</h1>
+            <p>Переименуйте членов семьи для удобной аналитики.</p>
         </div>
     </header>
 
     <main class="content">
-
-        <div class="family-member" data-member="Папа">
-            <i class="fas fa-male member-icon"></i>
-            <div class="member-details">
-                <input type="text" id="member_parent1_name" value="Папа">
-                <p id="member_parent1_role">Основной пользователь</p>
-            </div>
-            <div class="member-actions">
-                <i class="fas fa-pencil-alt"></i>
+        <form id="familySettingsForm">
+            
+            <div class="input-group">
+                <i class="fas fa-female"></i>
+                <div class="input-wrapper">
+                    <label for="parent2Name">Мама</label>
+                    <input type="text" id="parent2Name" name="parent2Name" placeholder="Введите имя">
                 </div>
-        </div>
-        
-        <div class="family-member" data-member="Мама">
-            <i class="fas fa-female member-icon"></i>
-            <div class="member-details">
-                <input type="text" id="member_parent2_name" value="Мама">
-                <p id="member_parent2_role">Пользователь</p>
             </div>
-            <div class="member-actions">
-                <i class="fas fa-pencil-alt"></i>
+
+            <div class="input-group">
+                <i class="fas fa-male"></i>
+                <div class="input-wrapper">
+                    <label for="parent1Name">Папа</label>
+                    <input type="text" id="parent1Name" name="parent1Name" placeholder="Введите имя">
                 </div>
-        </div>
-
-        <div class="family-member" data-member="Ребенок">
-            <i class="fas fa-child member-icon child"></i>
-            <div class="member-details">
-                <input type="text" id="member_child_name" value="Ребенок">
-                <p id="member_child_role">Зависимый профиль</p>
             </div>
-            <div class="member-actions">
-                <i class="fas fa-pencil-alt"></i>
-                <i class="fas fa-trash-alt" id="deleteChild"></i>
+
+            <div class="input-group icon-child">
+                <i class="fas fa-child"></i>
+                <div class="input-wrapper">
+                    <label for="childName">Ребенок</label>
+                    <input type="text" id="childName" name="childName" placeholder="Введите имя">
+                </div>
             </div>
-        </div>
 
-        <div class="add-member-button">
-            <i class="fas fa-plus-circle"></i> Добавить члена семьи
-        </div>
-
-        <button class="save-button" id="saveButton">Сохранить изменения</button>
-        
+            <button type="submit" class="save-button">Сохранить изменения</button>
+        </form>
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item main-nav">
+        <div class="nav-item">
             <i class="fas fa-home"></i>
             <span>Главный</span>
         </div>
@@ -305,55 +247,41 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const MAIN_SCREEN_FILE = 'index.html'; 
+        const MAIN_SCREEN_FILE = 'index.html';
         const MEMBER_NAMES_KEY = 'familyMemberNames';
 
-        // 1. Функция загрузки имен из localStorage
-        function loadNames() {
-            const storedNames = localStorage.getItem(MEMBER_NAMES_KEY);
-            if (storedNames) {
-                const names = JSON.parse(storedNames);
-                document.getElementById('member_parent1_name').value = names.parent1 || 'Папа';
-                document.getElementById('member_parent2_name').value = names.parent2 || 'Мама';
-                document.getElementById('member_child_name').value = names.child || 'Ребенок';
-            }
-        }
-        
-        // 2. Функция сохранения имен в localStorage
-        function saveNames() {
-            const names = {
-                parent1: document.getElementById('member_parent1_name').value.trim() || 'Папа',
-                parent2: document.getElementById('member_parent2_name').value.trim() || 'Мама',
-                child: document.getElementById('member_child_name').value.trim() || 'Ребенок'
+        // 1. Загрузка текущих имен при открытии
+        const loadNames = () => {
+            const defaultNames = { parent1: 'Папа', parent2: 'Мама', child: 'Ребенок' };
+            const storedNames = JSON.parse(localStorage.getItem(MEMBER_NAMES_KEY)) || defaultNames;
+
+            document.getElementById('parent1Name').value = storedNames.parent1;
+            document.getElementById('parent2Name').value = storedNames.parent2;
+            document.getElementById('childName').value = storedNames.child;
+        };
+
+        // 2. Сохранение новых имен при отправке формы
+        const saveNames = (event) => {
+            event.preventDefault(); // Предотвращаем стандартную отправку формы
+            
+            const newNames = {
+                parent1: document.getElementById('parent1Name').value.trim() || 'Папа',
+                parent2: document.getElementById('parent2Name').value.trim() || 'Мама',
+                child: document.getElementById('childName').value.trim() || 'Ребенок'
             };
-            localStorage.setItem(MEMBER_NAMES_KEY, JSON.stringify(names));
-            return names;
-        }
 
-        // Загружаем имена при загрузке страницы
-        loadNames();
-
-        // 3. Обработчик кнопки "Сохранить изменения"
-        document.getElementById('saveButton').addEventListener('click', () => {
-            saveNames();
-            alert('Изменения сохранены! На главном экране отобразятся новые имена.');
+            localStorage.setItem(MEMBER_NAMES_KEY, JSON.stringify(newNames));
+            
+            // Оповещение и возврат на главный экран
+            alert('Имена членов семьи сохранены!');
             window.location.href = MAIN_SCREEN_FILE;
-        });
+        };
 
-        // 4. Обработчик кнопки "Назад"
+        // 3. Обработчики
+        loadNames();
+        document.getElementById('familySettingsForm').addEventListener('submit', saveNames);
         document.getElementById('backButton').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE; 
-        });
-        
-        // 5. Обработчик кнопки "Главный" в нижнем меню
-        document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE;
-        });
-        
-        // 6. Обработчик кнопки "Удалить ребенка"
-        document.getElementById('deleteChild').addEventListener('click', () => {
-            alert('Член семьи "Ребенок" удален (только имитация, функционал не реализован).');
-            // В реальном приложении здесь будет логика удаления из данных
+            window.location.href = MAIN_SCREEN_FILE;
         });
     });
 </script>
