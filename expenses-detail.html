@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* CSS СТИЛИ - (Используем ваш предыдущий CSS и стили детализации) */
+        /* Общие стили */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -19,18 +19,9 @@
 
         :root {
             --alfa-red: #EE3124;
-            --red-c1-dark: #801818; 
-            --red-c2-medium: #C02929;
-            --red-c3-light: #E04444; 
-            --bg-light-gray: #F7F7F7;
             --text-color: #333;
             --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            
-            /* Цвета для детализации пончиковых диаграмм */
-            --detail-c1: #D9443A; 
-            --detail-c2: #F06E66; 
-            --detail-c3: #FFC0B9; 
-            --detail-c4: #FFECEB; 
+            --bg-light-gray: #F7F7F7;
         }
 
         .app-screen {
@@ -44,7 +35,7 @@
             overflow-x: hidden;
         }
 
-        /* Шапка и навигация */
+        /* Шапка */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -53,9 +44,11 @@
             font-weight: 600;
         }
         .status-icons i { margin-left: 5px; }
+
         .header-nav {
             padding: 0 20px;
         }
+
         .back-settings {
             display: flex;
             justify-content: space-between;
@@ -63,9 +56,7 @@
             font-size: 18px;
             color: var(--text-color);
         }
-        .settings-icon {
-            transform: rotate(90deg);
-        }
+
         .month-selector {
             display: flex;
             justify-content: space-between;
@@ -81,9 +72,7 @@
             font-size: 14px;
             padding-left: 10px;
         }
-        .disabled-arrow {
-            color: #ccc;
-        }
+        
         .tabs {
             display: flex;
             gap: 8px;
@@ -104,10 +93,11 @@
             color: white;
         }
 
-        /* Контент и карточки */
+        /* Контент */
         .content {
             padding: 0 20px;
         }
+
         .card {
             background-color: white;
             border-radius: 20px;
@@ -115,115 +105,119 @@
             margin-bottom: 20px;
             padding: 20px;
         }
-        .banner-card { 
+        
+        /* Заголовок детализации */
+        .detail-header-card {
             background-color: var(--bg-light-gray);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 15px 20px;
+            margin-bottom: 25px;
         }
-        .banner-card h3 {
+        .detail-header-card h3 {
             font-size: 18px; 
             margin: 0;
             font-weight: 600;
-            color: var(--text-color);
         }
-        
-        /* Стили для карточек детализации и кликабельности */
-        .detail-card {
+
+        /* Карточка члена семьи */
+        .member-card {
             padding: 15px 20px;
-            cursor: pointer; 
-            transition: transform 0.1s;
-        }
-        .detail-card:active {
-            transform: scale(0.98); 
-        }
-
-        .detail-card-header {
+            margin-bottom: 25px;
             display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .detail-card-header .color-swatch {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .c1 { background-color: var(--red-c1-dark); }
-        .c2 { background-color: var(--red-c2-medium); }
-        .c3 { background-color: var(--red-c3-light); }
-        
-        .detail-card-header h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .detail-chart-row {
-            display: flex;
-            align-items: center;
+            flex-direction: column; 
             gap: 15px;
         }
-        .detail-chart-wrapper {
-            position: relative;
-            width: 100px;
-            height: 100px;
+        
+        .member-header {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .member-swatch {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
             margin-right: 10px;
             flex-shrink: 0;
         }
-        .chart-numbers {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 12px;
-            font-weight: 600;
-            color: #333; 
-            text-align: center;
-            pointer-events: none;
-        }
-        .chart-numbers div {
-            position: absolute;
-            transform: translate(-50%, -50%);
-        }
         
-        .num-10 { top: 30%; left: 30%; font-size: 11px;}
-        .num-14 { top: 60%; left: 15%; font-size: 11px;}
-        .num-6 { top: 85%; left: 30%; font-size: 11px;}
-        .num-30 { top: 80%; left: 75%; font-size: 11px;}
-        .num-40 { top: 25%; left: 80%; font-size: 11px;}
-        
-        .detail-legend {
+        .member-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .chart-wrapper {
+            width: 120px; /* Размер кольцевой диаграммы */
+            height: 120px;
+            flex-shrink: 0;
+            margin-right: 20px;
+        }
+
+        /* Стиль для списка расходов */
+        .expense-list {
             list-style: none;
             padding: 0;
             margin: 0;
-            flex-grow: 1; 
+            flex-grow: 1;
+            font-size: 14px;
+            line-height: 1.6;
         }
-        .detail-legend-item {
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .expense-item span:first-child {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #666;
-            text-align: left;
         }
-        .detail-legend-swatch {
+
+        .category-swatch {
             display: inline-block;
             width: 10px;
             height: 10px;
             border-radius: 50%;
             margin-right: 8px;
+            flex-shrink: 0;
         }
 
-        .d-c1 { background-color: var(--detail-c1); }
-        .d-c2 { background-color: var(--detail-c2); }
-        .d-c3 { background-color: var(--detail-c3); }
-        .d-c4 { background-color: var(--detail-c4); }
+        .amount {
+            font-weight: 600;
+        }
+
+        /* Цвета для трех членов семьи (для заголовков) */
+        .color-member-1 { background-color: #801818; } 
+        .color-member-2 { background-color: #C02929; } 
+        .color-member-3 { background-color: #E04444; } 
+
+        /* Цвета для категорий внутри диаграмм */
+        /* Ребенок */
+        .c-child-1 { background-color: #b71c1c; }
+        .c-child-2 { background-color: #c62828; }
+        .c-child-3 { background-color: #d32f2f; }
+        .c-child-4 { background-color: #e53935; }
+
+        /* Родитель #1 */
+        .c-parent1-1 { background-color: #d84315; }
+        .c-parent1-2 { background-color: #e64a19; }
+        .c-parent1-3 { background-color: #f4511e; }
+        .c-parent1-4 { background-color: #ff7043; }
+        
+        /* Родитель #2 */
+        .c-parent2-1 { background-color: #2e7d32; }
+        .c-parent2-2 { background-color: #388e3c; }
+        .c-parent2-3 { background-color: #43a047; }
+        .c-parent2-4 { background-color: #66bb6a; }
 
 
-        /* Нижнее меню */
+        /* Нижнее меню (скопировано с главного) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -268,9 +262,7 @@
             text-align: center;
             font-weight: bold;
         }
-        .nav-item:last-child .badge { 
-            right: 20px; 
-        }
+        /* Вкладка "Расходы" должна быть активной на этом экране */
         .active-nav i, .active-nav span:not(.badge) { 
             color: var(--alfa-red);
         }
@@ -312,95 +304,71 @@
 
     <main class="content">
 
-        <div class="card banner-card">
-            <h3 id="detailHeader">Детализация расходов</h3>
+        <div class="card detail-header-card">
+            <h3>Детализация расходов</h3>
         </div>
 
-        <div class="card detail-card" id="РебенокCard" data-member="Ребенок" style="display: none;">
-            <div class="detail-card-header">
-                <span class="color-swatch c1"></span>
-                <h3>Ребенок</h3>
+        <div class="card member-card" data-member="Ребенок">
+            <div class="member-header">
+                <span class="member-swatch color-member-1"></span>
+                Ребенок
             </div>
-            <div class="detail-chart-row">
-                <div class="detail-chart-wrapper">
-                    <canvas id="РебенокChart"></canvas>
-                    <div class="chart-numbers">
-                        <div class="num-10">10</div>
-                        <div class="num-14">14</div>
-                        <div class="num-6">6</div>
-                        <div class="num-30">30</div>
-                        <div class="num-40">40</div>
-                    </div>
+            <div class="member-content">
+                <div class="chart-wrapper">
+                    <canvas id="chartChild"></canvas>
                 </div>
-                <ul class="detail-legend">
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c1"></span>Одежда</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c2"></span>Игрушки</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c3"></span>Развлечения</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c4"></span>Питание</li>
+                <ul class="expense-list">
+                    <li class="expense-item"><span><span class="category-swatch c-child-1"></span> Фастфуд</span> <span class="amount">4 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-child-2"></span> Образование</span> <span class="amount">3 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-child-3"></span> Развлечения</span> <span class="amount">2 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-child-4"></span> Прочее</span> <span class="amount">1 000 ₽</span></li>
+                    <li class="expense-item" style="margin-top: 15px; font-weight: bold;"><span>ИТОГО:</span> <span class="amount">10 000 ₽</span></li>
                 </ul>
             </div>
         </div>
 
-        
-        <div class="card detail-card" id="Родитель #1Card" data-member="Родитель #1" style="display: none;">
-            <div class="detail-card-header">
-                <span class="color-swatch c2"></span>
-                <h3>Родитель #1</h3>
+        <div class="card member-card" data-member="Родитель #1">
+            <div class="member-header">
+                <span class="member-swatch color-member-2"></span>
+                Родитель #1
             </div>
-            <div class="detail-chart-row">
-                <div class="detail-chart-wrapper">
-                    <canvas id="Родитель #1Chart"></canvas>
-                    <div class="chart-numbers">
-                        <div class="num-10">10</div>
-                        <div class="num-14">14</div>
-                        <div class="num-6">6</div>
-                        <div class="num-30">30</div>
-                        <div class="num-40">40</div>
-                    </div>
+            <div class="member-content">
+                <div class="chart-wrapper">
+                    <canvas id="chartParent1"></canvas>
                 </div>
-                <ul class="detail-legend">
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c1"></span>Еда</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c2"></span>Транспорт</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c3"></span>Подарки</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c4"></span>Развлечения</li>
+                <ul class="expense-list">
+                    <li class="expense-item"><span><span class="category-swatch c-parent1-1"></span> Еда/Продукты</span> <span class="amount">12 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-parent1-2"></span> Транспорт</span> <span class="amount">8 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-parent1-3"></span> Одежда</span> <span class="amount">5 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-parent1-4"></span> Прочее</span> <span class="amount">5 000 ₽</span></li>
+                    <li class="expense-item" style="margin-top: 15px; font-weight: bold;"><span>ИТОГО:</span> <span class="amount">30 000 ₽</span></li>
                 </ul>
             </div>
         </div>
 
-        
-        <div class="card detail-card" id="Родитель #2Card" data-member="Родитель #2" style="display: none;">
-            <div class="detail-card-header">
-                <span class="color-swatch c3"></span>
-                <h3>Родитель #2</h3>
+        <div class="card member-card" data-member="Родитель #2">
+            <div class="member-header">
+                <span class="member-swatch color-member-3"></span>
+                Родитель #2
             </div>
-            <div class="detail-chart-row">
-                <div class="detail-chart-wrapper">
-                    <canvas id="Родитель #2Chart"></canvas>
-                    <div class="chart-numbers">
-                        <div class="num-10">10</div>
-                        <div class="num-14">14</div>
-                        <div class="num-6">6</div>
-                        <div class="num-30">30</div>
-                        <div class="num-40">40</div>
-                    </div>
+            <div class="member-content">
+                <div class="chart-wrapper">
+                    <canvas id="chartParent2"></canvas>
                 </div>
-                <ul class="detail-legend">
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c1"></span>Коммуналка</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c2"></span>Продукты</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c3"></span>Спорт</li>
-                    <li class="detail-legend-item"><span class="detail-legend-swatch d-c4"></span>Отдых</li>
+                <ul class="expense-list">
+                    <li class="expense-item"><span><span class="category-swatch c-parent2-1"></span> Ипотека/Кредиты</span> <span class="amount">30 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-parent2-2"></span> Еда/Продукты</span> <span class="amount">15 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-parent2-3"></span> Коммуналка</span> <span class="amount">5 000 ₽</span></li>
+                    <li class="expense-item"><span><span class="category-swatch c-parent2-4"></span> Транспорт</span> <span class="amount">5 000 ₽</span></li>
+                    <li class="expense-item" style="margin-top: 15px; font-weight: bold;"><span>ИТОГО:</span> <span class="amount">55 000 ₽</span></li>
                 </ul>
             </div>
-        </div>
-
-        <div class="card banner-card" id="allDetailsCard" style="display: none;">
-            <h3>Выберите члена семьи на главном экране</h3>
         </div>
 
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item active-nav">
+        <div class="nav-item">
             <i class="fas fa-home"></i>
             <span>Главный</span>
         </div>
@@ -426,108 +394,90 @@
 </div>
 
 <script>
-    const MAIN_SCREEN_FILE = 'index.html';
-    
+    const MAIN_SCREEN_FILE = 'index.html'; // Ваш главный файл
+    const ALL_ANALYTICS_SCREEN_FILE = 'index.html'; // Главный экран "Вся аналитика"
+    const EXPENSES_TAB_FILE = 'details.html'; // Этот же файл
+
     document.addEventListener('DOMContentLoaded', () => {
 
-        const chartColors = ['#D9443A', '#F06E66', '#FFC0B9', '#FFECEB'];
-        const chartData = [10, 14, 6, 30, 40]; 
-        const chartOptions = {
-            responsive: true,
-            aspectRatio: 1, 
-            cutout: '60%', 
-            plugins: {
-                legend: { display: false },
-                tooltip: { enabled: false }
+        // --- ДАННЫЕ ДЛЯ ГРАФИКОВ ---
+        const memberData = {
+            'Ребенок': {
+                labels: ['Фастфуд', 'Образование', 'Развлечения', 'Прочее'],
+                data: [4000, 3000, 2000, 1000],
+                backgroundColors: ['#b71c1c', '#c62828', '#d32f2f', '#e53935'],
+                canvasId: 'chartChild'
+            },
+            'Родитель #1': {
+                labels: ['Еда/Продукты', 'Транспорт', 'Одежда', 'Прочее'],
+                data: [12000, 8000, 5000, 5000],
+                backgroundColors: ['#d84315', '#e64a19', '#f4511e', '#ff7043'],
+                canvasId: 'chartParent1'
+            },
+            'Родитель #2': {
+                labels: ['Ипотека/Кредиты', 'Еда/Продукты', 'Коммуналка', 'Транспорт'],
+                data: [30000, 15000, 5000, 5000],
+                backgroundColors: ['#2e7d32', '#388e3c', '#43a047', '#66bb6a'],
+                canvasId: 'chartParent2'
             }
         };
 
-        const chartDataMap = {
-            'Ребенок': { labels: ['Одежда', 'Игрушки', 'Развлечения', 'Питание'], data: [20, 30, 25, 25] },
-            'Родитель #1': { labels: ['Еда', 'Транспорт', 'Подарки', 'Развлечения'], data: [40, 10, 5, 45] },
-            'Родитель #2': { labels: ['Коммуналка', 'Продукты', 'Спорт', 'Отдых'], data: [15, 50, 20, 15] }
-        };
-
-        // Функция для инициализации графика
-        const initializeChart = (member) => {
-            const chartConfig = chartDataMap[member];
-            if (!chartConfig) return;
-
-            const ctx = document.getElementById(`${member}Chart`).getContext('2d');
-            new Chart(ctx, { 
-                type: 'doughnut', 
-                data: { 
-                    labels: chartConfig.labels, 
-                    datasets: [{ 
-                        data: chartConfig.data, 
-                        backgroundColor: chartColors, 
-                        borderWidth: 0, 
-                        hoverOffset: 0 
-                    }] 
-                }, 
-                options: chartOptions 
+        // --- ИНИЦИАЛИЗАЦИЯ ГРАФИКОВ ---
+        const initChart = (data) => {
+            const ctx = document.getElementById(data.canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        data: data.data,
+                        backgroundColor: data.backgroundColors,
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '60%', 
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true } 
+                    }
+                }
             });
-        };
-
-        // 🚀 НОВАЯ ЛОГИКА: ОПРЕДЕЛЕНИЕ КАРТОЧКИ ДЛЯ ОТОБРАЖЕНИЯ
-        const urlParams = new URLSearchParams(window.location.search);
-        const memberParam = urlParams.get('member');
-
-        if (memberParam) {
-            // Если есть параметр (клик по сегменту графика)
-            const targetCardId = `${memberParam}Card`;
-            const targetCard = document.getElementById(targetCardId);
-
-            document.getElementById('detailHeader').textContent = memberParam; // Меняем заголовок
-            
-            // Скрываем общий баннер и показываем нужную карточку
-            document.querySelector('.card.banner-card h3').style.display = 'none';
-            if (targetCard) {
-                targetCard.style.display = 'block';
-                initializeChart(memberParam); // Инициализируем график
-            } else {
-                // Если параметр есть, но карточки нет (например, ошибка)
-                document.getElementById('allDetailsCard').style.display = 'block';
-                document.getElementById('detailHeader').textContent = 'Ошибка данных';
-            }
-
-        } else {
-            // Если нет параметра (клик по вкладке "Расходы")
-            document.getElementById('allDetailsCard').style.display = 'block';
-            document.getElementById('detailHeader').textContent = 'Детализация расходов';
         }
+        
+        Object.values(memberData).forEach(initChart);
 
-
-        // ЛОГИКА КЛИКАБЕЛЬНОСТИ
-        document.querySelectorAll('.detail-card').forEach(card => {
-            const title = card.querySelector('h3').textContent;
-            card.addEventListener('click', () => {
-                alert(`Переход к детализированным тратам по категории (пока просто alert): ${title}.`);
-            });
-        });
-
-        // ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТАБОВ (ВОЗВРАТ)
-        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE;
-        });
-
-        // Переход назад на первый экран (по стрелке)
+        // --- ЛОГИКА НАВИГАЦИИ ---
+        
+        // Кнопка Назад (возврат на главный экран)
         document.querySelector('.back-button').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE;
         });
         
-        // Вкладка "Расходы" (остаемся здесь)
-        document.getElementById('expensesTab').addEventListener('click', (e) => {
+        // Клик по вкладкам
+        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
+             window.location.href = ALL_ANALYTICS_SCREEN_FILE;
+        });
+
+        document.getElementById('expensesTab').addEventListener('click', () => {
+             // Мы уже на этом экране, просто сброс активности других
              document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-             e.target.classList.add('active');
+             document.getElementById('expensesTab').classList.add('active');
         });
         
-        // Вкладка "Доходы"
-        document.getElementById('incomeTab').addEventListener('click', (e) => {
-             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-             e.target.classList.add('active');
-             alert('Экран доходов еще не разработан.');
+        document.getElementById('incomeTab').addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('incomeTab').classList.add('active');
+            alert('Экран доходов еще не разработан.');
         });
+        
+        // Клик по нижнему меню "Главный"
+        document.querySelector('.bottom-nav .nav-item:first-child').addEventListener('click', () => {
+            window.location.href = MAIN_SCREEN_FILE;
+        });
+
     });
 </script>
 </body>
