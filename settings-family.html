@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Настройка семьи</title>
+    <title>Настройки семьи</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
-        /* Стили, как в предыдущих ответах */
+        /* CSS Стили для settings-family.html */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -18,9 +18,13 @@
 
         :root {
             --alfa-red: #EE3124;
+            --red-c1-dark: #801818; 
+            --red-c2-medium: #C02929;
+            --red-c3-light: #E04444; 
+            --bg-light-gray: #F7F7F7;
             --text-color: #333;
             --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            --bg-light-gray: #F7F7F7;
+            --member-blue: #34A853; /* Условный цвет для иконки "Ребенок" */
         }
 
         .app-screen {
@@ -46,14 +50,24 @@
             padding: 0 20px;
         }
 
-        .back-settings {
+        .back-title {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
             padding-bottom: 15px;
             font-size: 18px;
             color: var(--text-color);
         }
-        
+        .back-button { 
+            cursor: pointer;
+            margin-right: 20px;
+            font-size: 20px;
+        }
+        .screen-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+        }
+
         .content {
             padding: 0 20px;
         }
@@ -65,82 +79,122 @@
             margin-bottom: 20px;
             padding: 20px;
         }
-
-        .detail-header-card {
-            background-color: var(--bg-light-gray);
-            padding: 15px 20px;
-            margin-bottom: 25px;
-        }
-        .detail-header-card h3 {
-            font-size: 22px; 
+        
+        /* Список членов семьи */
+        .member-list {
+            list-style: none;
+            padding: 0;
             margin: 0;
-            font-weight: 700;
         }
-        .detail-header-card p {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* Настройка членов семьи */
-        .member-settings-item {
+        .member-item {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 15px 0;
             border-bottom: 1px solid #eee;
         }
-        
-        .member-settings-item:last-child {
+        .member-item:last-child {
             border-bottom: none;
         }
-
-        .member-swatch {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-
-        .c1 { background-color: #801818; }
-        .c2 { background-color: #C02929; }
-        .c3 { background-color: #E04444; }
-
-        .name-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-
-        .save-button {
-            background-color: var(--alfa-red);
-            color: white;
-            border: none;
-            padding: 12px 15px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-            transition: background-color 0.1s;
-        }
-        .save-button:active {
-            background-color: #d12c22;
-        }
         
-        .delete-icon {
-            color: #ccc;
-            cursor: pointer;
-            transition: color 0.1s;
+        .member-info {
+            display: flex;
+            align-items: center;
         }
-        .delete-icon:hover {
-            color: var(--alfa-red);
+        .member-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            color: var(--text-color);
+            font-size: 18px;
+        }
+        .member-icon.c1 { background-color: var(--red-c1-dark); color: white; }
+        .member-icon.c2 { background-color: var(--red-c2-medium); color: white; }
+        .member-icon.c3 { background-color: var(--red-c3-light); color: white; }
+        .member-icon.child { background-color: var(--member-blue); color: white; }
+
+
+        .member-name-role {
+            display: flex;
+            flex-direction: column;
+        }
+        .member-name-role p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .member-name-role small {
+            font-size: 12px;
+            color: #888;
         }
 
+        .member-actions button {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 18px;
+            cursor: pointer;
+            margin-left: 15px;
+            padding: 5px;
+        }
+        .member-actions button:active {
+            opacity: 0.5;
+        }
+        .edit-icon { color: var(--alfa-red); }
+
+        /* Кнопка Добавить */
+        .add-member-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #eee;
+            color: var(--text-color);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .add-member-button:active {
+            background-color: #ddd;
+        }
+
+        /* Нижнее меню */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 390px;
+            height: 70px;
+            background-color: white;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 5px; 
+            font-size: 11px;
+            color: #888;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .nav-item i {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
@@ -157,77 +211,124 @@
     </div>
 
     <header class="header-nav">
-        <div class="back-settings">
-            <i class="fas fa-chevron-left back-button"></i>
+        <div class="back-title">
+            <i class="fas fa-chevron-left back-button" id="backButton"></i>
+            <h1 class="screen-title">Настройки семьи</h1>
         </div>
     </header>
 
     <main class="content">
 
-        <div class="card detail-header-card">
-            <h3>Настройка семьи</h3>
-            <p>Переименуйте членов семьи для удобной аналитики</p>
-        </div>
-
         <div class="card">
-            <div class="member-settings-item">
-                <span class="member-swatch c1"></span>
-                <input type="text" class="name-input" value="Ребенок" data-member-id="1">
-                <i class="fas fa-trash-alt delete-icon"></i>
-            </div>
-            
-            <div class="member-settings-item">
-                <span class="member-swatch c2"></span>
-                <input type="text" class="name-input" value="Мама" data-member-id="2">
-                <i class="fas fa-trash-alt delete-icon"></i>
-            </div>
-            
-            <div class="member-settings-item">
-                <span class="member-swatch c3"></span>
-                <input type="text" class="name-input" value="Папа" data-member-id="3">
-                <i class="fas fa-trash-alt delete-icon"></i>
-            </div>
-            
-            <button class="save-button" id="saveSettings">Сохранить изменения</button>
-        </div>
+            <ul class="member-list">
+                <li class="member-item">
+                    <div class="member-info">
+                        <div class="member-icon c2"><i class="fas fa-female"></i></div>
+                        <div class="member-name-role">
+                            <p>Мама</p>
+                            <small>Основной пользователь</small>
+                        </div>
+                    </div>
+                    <div class="member-actions">
+                        <button class="edit-btn"><i class="fas fa-pencil-alt edit-icon"></i></button>
+                    </div>
+                </li>
 
+                <li class="member-item">
+                    <div class="member-info">
+                        <div class="member-icon c3"><i class="fas fa-male"></i></div>
+                        <div class="member-name-role">
+                            <p>Папа</p>
+                            <small>Сопользователь</small>
+                        </div>
+                    </div>
+                    <div class="member-actions">
+                        <button class="edit-btn"><i class="fas fa-pencil-alt edit-icon"></i></button>
+                    </div>
+                </li>
+                
+                <li class="member-item">
+                    <div class="member-info">
+                        <div class="member-icon child"><i class="fas fa-child"></i></div>
+                        <div class="member-name-role">
+                            <p>Ребенок</p>
+                            <small>Зависимый профиль</small>
+                        </div>
+                    </div>
+                    <div class="member-actions">
+                        <button class="edit-btn"><i class="fas fa-pencil-alt edit-icon"></i></button>
+                        <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </li>
+            </ul>
+
+            <button class="add-member-button" id="addMemberButton"><i class="fas fa-plus-circle"></i> Добавить члена семьи</button>
+        </div>
+        
     </main>
+
+    <nav class="bottom-nav">
+        <div class="nav-item main-nav"> <i class="fas fa-home"></i>
+            <span>Главный</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-credit-card"></i>
+            <span class="badge one">1</span>
+            <span>Платежи</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Выгода</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>История</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-comment-dots"></i>
+            <span class="badge four">4</span>
+            <span>Чаты</span>
+        </div>
+    </nav>
 </div>
 
 <script>
-    // 💥 ИСПРАВЛЕНО: Указываем ТОЧНОЕ имя главного файла
-    const MAIN_SCREEN_FILE = 'Аналитика расходов (Основной экран).html'; 
-
     document.addEventListener('DOMContentLoaded', () => {
-
-        // Кнопка Назад (возврат на главный экран)
-        document.querySelector('.back-button').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE;
-        });
-
-        // Кнопка Сохранить
-        document.getElementById('saveSettings').addEventListener('click', () => {
-            const inputs = document.querySelectorAll('.name-input');
-            const newNames = Array.from(inputs).map(input => input.value);
-            
-            // В реальном приложении здесь была бы отправка данных на сервер
-            alert(`Имена сохранены: ${newNames.join(', ')}. Приложение обновит аналитику.`);
-
-            // Возврат на главный экран
-            window.location.href = MAIN_SCREEN_FILE;
+        // Константа с именем файла главного экрана
+        const MAIN_SCREEN_FILE = 'index.html'; // ИСПРАВЛЕНО: Главный экран теперь index.html
+        
+        // 1. Кнопка Назад (стрелка влево)
+        document.getElementById('backButton').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE; // Переход на index.html
         });
         
-        // Логика удаления (симуляция)
-        document.querySelectorAll('.delete-icon').forEach(icon => {
-             icon.addEventListener('click', (e) => {
-                 const itemName = e.target.closest('.member-settings-item').querySelector('.name-input').value;
-                 if (confirm(`Вы уверены, что хотите удалить ${itemName}?`)) {
-                    e.target.closest('.member-settings-item').remove();
-                    alert(`${itemName} удален. Нажмите "Сохранить", чтобы применить.`);
-                 }
-             });
+        // 2. Клик по нижнему меню (Главный)
+        document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE; // Переход на index.html
         });
-
+        
+        // 3. Обработчики для кнопок редактирования и удаления
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const memberName = button.closest('.member-item').querySelector('p').textContent;
+                alert(`Открывается экран редактирования для: ${memberName}`);
+            });
+        });
+        
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const memberName = button.closest('.member-item').querySelector('p').textContent;
+                if (confirm(`Вы уверены, что хотите удалить профиль "${memberName}"?`)) {
+                    button.closest('.member-item').remove();
+                    alert(`Профиль "${memberName}" удален.`);
+                }
+            });
+        });
+        
+        // 4. Кнопка "Добавить члена семьи"
+        document.getElementById('addMemberButton').addEventListener('click', () => {
+            alert('Открывается экран добавления нового члена семьи.');
+        });
     });
 </script>
 </body>
