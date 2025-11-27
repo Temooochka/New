@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* CSS Стили для главного экрана */
+        /* CSS Стили для главного экрана (без изменений, скопированы из предыдущего ответа) */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -357,7 +357,7 @@
                 <h3>Рекомендации ИИ</h3>
                 <p>На базе семейных расходов <span class="arrow-right">→</span></p>
             </div>
-            <button class="ai-button">Альфа-ИИ<i class="fas fa-plus-circle"></i></button>
+            <button class="ai-button" id="aiButton">Альфа-ИИ<i class="fas fa-plus-circle"></i></button> 
         </div>
 
     </main>
@@ -391,13 +391,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- ФАЙЛЫ ДЛЯ НАВИГАЦИИ ---
-        const MAIN_SCREEN_FILE = 'index.html'; // Главный экран теперь называется index.html
+        const MAIN_SCREEN_FILE = 'index.html'; // Главный экран
         const EXPENSES_DETAIL_FILE = 'details.html'; // Экран детализации
-        const AI_RECOMMENDATIONS_FILE = 'ai-recommendations.html';
+        const AI_RECOMMENDATIONS_FILE = 'ai-recommendations.html'; // ФАЙЛ ДОБАВЛЕН
         const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
         const IMPORT_EXPORT_FILE = 'import-export.html'; 
 
-        // --- ИНИЦИАЛИЗАЦИЯ ГРАФИКА ---
+        // --- ИНИЦИАЛИЗАЦИЯ ГРАФИКА (без изменений) ---
         const ctx = document.getElementById('expenseChart').getContext('2d');
         new Chart(ctx, {
             type: 'pie',
@@ -422,7 +422,7 @@
 
         // --- ЛОГИКА НАВИГАЦИИ ---
 
-        // Все переходы на детализацию:
+        // Все переходы на детализацию (details.html):
         document.querySelectorAll('.legend-item').forEach(item => {
              item.addEventListener('click', () => {
                  window.location.href = EXPENSES_DETAIL_FILE;
@@ -437,6 +437,11 @@
         document.getElementById('familyAnalyticsCard').addEventListener('click', () => {
              window.location.href = EXPENSES_DETAIL_FILE; 
         });
+
+        // ПЕРЕХОД НА РЕКОМЕНДАЦИИ ИИ (ИСПРАВЛЕНО!)
+        document.getElementById('aiRecommendationsCard').addEventListener('click', () => {
+             window.location.href = AI_RECOMMENDATIONS_FILE; 
+        });
         
         // Другие переходы
         document.getElementById('settingsIcon').addEventListener('click', () => {
@@ -449,16 +454,19 @@
              window.location.href = IMPORT_EXPORT_FILE; 
         });
         
-        // Кнопка Назад (вверху слева) - в рамках прототипа просто перезагружает страницу (index.html)
+        // Кнопка Назад (вверху слева) - перезагружает главную страницу
         document.querySelector('.back-button').addEventListener('click', () => {
-             window.location.reload(); 
+             window.location.href = MAIN_SCREEN_FILE;
         });
         
-        // Табы
+        // Таб "Вся аналитика" (Остаемся на Главном)
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
              document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
              document.getElementById('allAnalyticsTab').classList.add('active');
+             window.location.href = MAIN_SCREEN_FILE;
         });
+        
+        // Таб "Доходы"
         document.getElementById('incomeTab').addEventListener('click', () => {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById('incomeTab').classList.add('active');
