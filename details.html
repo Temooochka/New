@@ -261,23 +261,23 @@
                 <ul class="legend-detail">
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-1"></span>Еда</span>
-                        <span>40%</span>
+                        <span>4 800 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-2"></span>Развлечения</span>
-                        <span>30%</span>
+                        <span>3 600 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-3"></span>Транспорт</span>
-                        <span>14%</span>
+                        <span>1 680 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-4"></span>Обучение</span>
-                        <span>10%</span>
+                        <span>1 200 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-1"></span>Прочее</span>
-                        <span>6%</span>
+                        <span>720 ₽</span>
                     </li>
                 </ul>
             </div>
@@ -292,23 +292,23 @@
                 <ul class="legend-detail">
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-1"></span>Продукты</span>
-                        <span>35%</span>
+                        <span>15 750 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-2"></span>Одежда</span>
-                        <span>25%</span>
+                        <span>11 250 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-3"></span>Красота</span>
-                        <span>20%</span>
+                        <span>9 000 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-4"></span>Дом</span>
-                        <span>10%</span>
+                        <span>4 500 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-1"></span>Прочее</span>
-                        <span>10%</span>
+                        <span>4 500 ₽</span>
                     </li>
                 </ul>
             </div>
@@ -323,23 +323,23 @@
                 <ul class="legend-detail">
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-1"></span>Авто</span>
-                        <span>45%</span>
+                        <span>29 700 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-2"></span>Техника</span>
-                        <span>20%</span>
+                        <span>13 200 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-3"></span>Спорт</span>
-                        <span>15%</span>
+                        <span>9 900 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-4"></span>Хобби</span>
-                        <span>10%</span>
+                        <span>6 600 ₽</span>
                     </li>
                     <li class="legend-detail-item">
                         <span><span class="detail-swatch c-cat-1"></span>Прочее</span>
-                        <span>10%</span>
+                        <span>6 600 ₽</span>
                     </li>
                 </ul>
             </div>
@@ -375,6 +375,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Константа с именем файла главного экрана
         const MAIN_SCREEN_FILE = 'Аналитика расходов (Основной экран).html'; 
         
         // Функция для создания кольцевого графика
@@ -402,30 +403,31 @@
             });
         }
 
+        // Данные: Исходные проценты, которые использовались для создания диаграмм
+        const childData = [40, 30, 14, 10, 6]; 
+        const momData = [35, 25, 20, 10, 10]; 
+        const dadData = [45, 20, 15, 10, 10]; 
+        const colors = ['#FF5A5A', '#D32F2F', '#C02929', '#8D1C1C', '#FF5A5A'];
+
+
         // 1. График Ребенка
-        createDoughnutChart('chart-child', [40, 30, 14, 10, 6], ['Еда', 'Развлечения', 'Транспорт', 'Обучение', 'Прочее'],
-            ['#FF5A5A', '#D32F2F', '#C02929', '#8D1C1C', '#FF5A5A']);
+        createDoughnutChart('chart-child', childData, ['Еда', 'Развлечения', 'Транспорт', 'Обучение', 'Прочее'], colors);
         
         // 2. График Мамы
-        createDoughnutChart('chart-mom', [35, 25, 20, 10, 10], ['Продукты', 'Одежда', 'Красота', 'Дом', 'Прочее'],
-            ['#FF5A5A', '#D32F2F', '#C02929', '#8D1C1C', '#FF5A5A']);
+        createDoughnutChart('chart-mom', momData, ['Продукты', 'Одежда', 'Красота', 'Дом', 'Прочее'], colors);
 
         // 3. График Папы
-        createDoughnutChart('chart-dad', [45, 20, 15, 10, 10], ['Авто', 'Техника', 'Спорт', 'Хобби', 'Прочее'],
-            ['#FF5A5A', '#D32F2F', '#C02929', '#8D1C1C', '#FF5A5A']);
+        createDoughnutChart('chart-dad', dadData, ['Авто', 'Техника', 'Спорт', 'Хобби', 'Прочее'], colors);
 
 
-        // --- ЛОГИКА НАВИГАЦИИ ---
+        // --- ЛОГИКА НАВИГАЦИИ (ИСПРАВЛЕНО) ---
         
-        // Кнопка Назад
+        // Кнопка Назад (стрелка влево) - ВОЗВРАЩАЕТ НА ГЛАВНЫЙ ЭКРАН
         document.querySelector('.back-button').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE; 
         });
         
-        // Табы
-        document.getElementById('incomeTab').addEventListener('click', () => {
-             alert('Экран доходов еще не разработан.');
-        });
+        // Таб "Вся аналитика" (возвращает на Главный экран)
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE;
         });
@@ -433,6 +435,11 @@
         // Клик по нижнему меню (Главный)
         document.querySelector('.nav-item').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE;
+        });
+        
+        // Таб "Доходы"
+        document.getElementById('incomeTab').addEventListener('click', () => {
+            alert('Экран доходов еще не разработан.');
         });
     });
 </script>
