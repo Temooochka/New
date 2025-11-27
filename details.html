@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* Общие CSS Стили (скопированы с index.html) */
+        /* Общие CSS Стили */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -19,9 +19,7 @@
 
         :root {
             --alfa-red: #EE3124;
-            --red-c1-dark: #801818; 
-            --red-c2-medium: #C02929;
-            --red-c3-light: #E04444; 
+            --main-red: #801818; 
             --bg-light-gray: #F7F7F7;
             --text-color: #333;
             --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -60,9 +58,6 @@
         .back-button {
             cursor: pointer;
         }
-        .settings-icon {
-            transform: rotate(90deg);
-        }
 
         .month-selector {
             display: flex;
@@ -74,10 +69,6 @@
             font-size: 28px;
             font-weight: 600;
             margin: 0;
-        }
-        .month-selector .arrows i {
-            font-size: 14px;
-            padding-left: 10px;
         }
 
         .tabs {
@@ -103,82 +94,98 @@
         .content {
             padding: 0 20px;
         }
-
-        /* Стиль для главного заголовка Детализации */
-        .detail-title {
+        
+        /* Заголовок страницы */
+        .page-title {
             font-size: 20px;
             font-weight: 600;
-            margin-bottom: 15px;
-            padding: 0;
+            margin: 0 0 20px 0;
+            padding: 10px 0;
+            background-color: var(--bg-light-gray);
+            border-radius: 10px;
+            text-align: center;
         }
-        
-        /* Стили для карточек детализации */
-        .detail-card {
+
+        .member-card {
             background-color: white;
             border-radius: 20px;
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
             padding: 20px;
             display: flex;
+            justify-content: space-between;
             align-items: flex-start;
         }
-        
-        .member-details-wrapper h2 {
-            font-size: 20px;
-            font-weight: 600;
+
+        .member-info h2 {
+            font-size: 24px;
+            font-weight: 700;
             margin: 0 0 15px 0;
-            display: flex;
-            align-items: center;
+            color: var(--main-red);
         }
-        .member-details-wrapper h2 i {
-            font-size: 14px;
-            margin-right: 10px;
+        .member-info h3 {
+             font-size: 18px;
+             font-weight: 600;
+             margin: 0 0 5px 0;
+             color: var(--text-color);
+        }
+        .member-info p {
+            font-size: 26px;
+            font-weight: 700;
             color: var(--alfa-red);
+            margin: 0 0 10px 0;
         }
 
-        .mini-chart-wrapper {
+        .chart-container {
             width: 120px;
-            min-width: 120px;
             height: 120px;
-            margin-right: 20px;
+            min-width: 120px; 
+            margin-left: 15px;
         }
 
-        .category-legend {
+        .legend-details {
             list-style: none;
             padding: 0;
             margin: 0;
-            font-size: 15px;
+            text-align: left;
+            margin-top: 10px;
+            flex-grow: 1; 
         }
-        .category-item {
+        .legend-item-detail {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
             align-items: center;
+            margin-bottom: 10px;
+            font-size: 15px;
         }
-        .category-name {
+        .legend-item-detail span:first-child {
             display: flex;
             align-items: center;
+            font-weight: 500;
         }
-        .category-swatch {
+        .legend-item-detail .category-name {
+            color: #666;
+        }
+        .legend-item-detail .amount {
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        .color-swatch-detail {
             display: inline-block;
             width: 10px;
             height: 10px;
             border-radius: 50%;
             margin-right: 8px;
         }
+        
+        /* Цветные метки (используем градации красного для категорий) */
+        .color-1 { background-color: #b22222; }
+        .color-2 { background-color: #cd5c5c; }
+        .color-3 { background-color: #e9967a; }
+        .color-4 { background-color: #fa8072; }
+        .color-5 { background-color: #ffb6c1; }
 
-        /* Цвета категорий (примерные) */
-        .cat-red-dark { background-color: #B00020; }
-        .cat-red-medium { background-color: #D32F2F; }
-        .cat-red-light { background-color: #FF5252; }
-        .cat-pink { background-color: #FF80AB; }
-        .cat-orange { background-color: #FF9800; }
-        .category-value {
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        /* Нижнее меню (скопировано с index.html) */
+        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -209,7 +216,8 @@
             font-size: 22px;
             margin-bottom: 4px;
         }
-        .active-nav.expenses i, .active-nav.expenses span:not(.badge) { 
+
+        .active-nav i, .active-nav span:not(.badge) { 
             color: var(--alfa-red);
         }
     </style>
@@ -242,61 +250,55 @@
         </div>
         
         <div class="tabs">
-            <button class="tab active" id="expensesTab">Расходы</button> 
+            <button class="tab active" id="expensesTab">Расходы</button>
             <button class="tab" id="incomeTab">Доходы</button>
             <button class="tab" id="allAnalyticsTab">Вся аналитика</button>
         </div>
-        
-        <h2 class="detail-title">Детализация расходов</h2>
     </header>
 
     <main class="content">
-
-        <div class="detail-card">
-            <div class="mini-chart-wrapper">
+        
+        <div class="page-title">Детализация расходов</div>
+        
+        <div class="member-card">
+            <div>
+                <h2>Ребенок</h2>
+                <h3>Всего за Октябрь:</h3>
+                <p>15 000 ₽</p> 
+                
+                <ul class="legend-details" id="childLegend">
+                    </ul>
+            </div>
+            <div class="chart-container">
                 <canvas id="childChart"></canvas>
             </div>
-            <div class="member-details-wrapper">
-                <h2 id="childCardTitle">Ребенок</h2> 
-                <ul class="category-legend">
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-dark"></span>Еда</div> <span class="category-value">40%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-medium"></span>Развлечения</div> <span class="category-value">30%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-light"></span>Транспорт</div> <span class="category-value">14%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-pink"></span>Обучение</div> <span class="category-value">10%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-orange"></span>Прочее</div> <span class="category-value">6%</span></li>
-                </ul>
-            </div>
         </div>
 
-        <div class="detail-card">
-            <div class="mini-chart-wrapper">
-                <canvas id="parent2Chart"></canvas>
+        <div class="member-card">
+            <div>
+                <h2>Мама</h2>
+                <h3>Всего за Октябрь:</h3>
+                <p>30 000 ₽</p> 
+                
+                <ul class="legend-details" id="momLegend">
+                    </ul>
             </div>
-            <div class="member-details-wrapper">
-                 <h2 id="parent2CardTitle">Мама</h2> 
-                <ul class="category-legend">
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-dark"></span>Продукты</div> <span class="category-value">35%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-medium"></span>Одежда</div> <span class="category-value">25%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-light"></span>Красота</div> <span class="category-value">20%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-pink"></span>Дом</div> <span class="category-value">10%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-orange"></span>Прочее</div> <span class="category-value">10%</span></li>
-                </ul>
+            <div class="chart-container">
+                <canvas id="momChart"></canvas>
             </div>
         </div>
-
-        <div class="detail-card">
-            <div class="mini-chart-wrapper">
-                <canvas id="parent1Chart"></canvas>
+        
+        <div class="member-card">
+            <div>
+                <h2>Папа</h2>
+                <h3>Всего за Октябрь:</h3>
+                <p>55 000 ₽</p> 
+                
+                <ul class="legend-details" id="dadLegend">
+                    </ul>
             </div>
-            <div class="member-details-wrapper">
-                 <h2 id="parent1CardTitle">Папа</h2> 
-                <ul class="category-legend">
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-dark"></span>Авто</div> <span class="category-value">45%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-medium"></span>Связь</div> <span class="category-value">25%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-red-light"></span>Еда</div> <span class="category-value">15%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-pink"></span>Развлечения</div> <span class="category-value">10%</span></li>
-                    <li class="category-item"><div class="category-name"><span class="category-swatch cat-orange"></span>Прочее</div> <span class="category-value">5%</span></li>
-                </ul>
+            <div class="chart-container">
+                <canvas id="dadChart"></canvas>
             </div>
         </div>
         
@@ -330,99 +332,132 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const MAIN_SCREEN_FILE = 'index.html'; 
-        const MEMBER_NAMES_KEY = 'familyMemberNames';
-
-        // 1. Загрузка имен из localStorage
-        const memberNames = JSON.parse(localStorage.getItem(MEMBER_NAMES_KEY)) || {
-            parent1: 'Папа',
-            parent2: 'Мама',
-            child: 'Ребенок'
-        };
+        const MAIN_SCREEN_FILE = 'index.html';
+        const INCOME_FILE = 'income.html'; 
         
-        // 2. Обновление заголовков карточек
-        document.getElementById('childCardTitle').textContent = memberNames.child;
-        document.getElementById('parent2CardTitle').textContent = memberNames.parent2;
-        document.getElementById('parent1CardTitle').textContent = memberNames.parent1;
+        // --- 1. ДАННЫЕ И РАСЧЕТЫ (100 000 ₽ общий расход) ---
+        
+        const formatRuble = (amount) => amount.toLocaleString('ru-RU') + ' ₽';
+        
+        // Данные для Ребенка (Всего 15 000 ₽)
+        const childData = {
+            total: 15000,
+            categories: [
+                { name: 'Еда', percent: 40, color: '#b22222' },
+                { name: 'Развлечения', percent: 30, color: '#cd5c5c' },
+                { name: 'Транспорт', percent: 14, color: '#e9967a' },
+                { name: 'Обучение', percent: 10, color: '#fa8072' },
+                { name: 'Прочее', percent: 6, color: '#ffb6c1' }
+            ]
+        };
+        // Данные для Мамы (Всего 30 000 ₽)
+        const momData = {
+            total: 30000,
+            categories: [
+                { name: 'Продукты', percent: 35, color: '#b22222' },
+                { name: 'Одежда', percent: 25, color: '#cd5c5c' },
+                { name: 'Красота', percent: 20, color: '#e9967a' },
+                { name: 'Дом', percent: 10, color: '#fa8072' },
+                { name: 'Прочее', percent: 10, color: '#ffb6c1' }
+            ]
+        };
+        // Данные для Папы (Всего 55 000 ₽)
+        const dadData = {
+            total: 55000,
+            categories: [
+                { name: 'Авто', percent: 45, color: '#b22222' },
+                { name: 'Связь', percent: 25, color: '#cd5c5c' },
+                { name: 'Еда', percent: 15, color: '#e9967a' },
+                { name: 'Развлечения', percent: 10, color: '#fa8072' },
+                { name: 'Прочее', percent: 5, color: '#ffb6c1' }
+            ]
+        };
 
-        // 3. Функция для создания мини-графиков
-        function createChart(ctxId, labels, data, colors) {
-            new Chart(document.getElementById(ctxId).getContext('2d'), {
+        
+        // --- 2. ФУНКЦИИ ОТОБРАЖЕНИЯ ---
+
+        const createLegendItem = (category, total) => {
+            const amount = Math.round(total * category.percent / 100);
+            return `
+                <li class="legend-item-detail">
+                    <span>
+                        <span class="color-swatch-detail" style="background-color: ${category.color};"></span>
+                        <span class="category-name">${category.name}</span>
+                    </span>
+                    <span class="amount">${formatRuble(amount)}</span>
+                </li>
+            `;
+        };
+
+        const renderChart = (ctxId, data) => {
+            const ctx = document.getElementById(ctxId).getContext('2d');
+            
+            const datasets = [{
+                data: data.categories.map(c => c.percent),
+                backgroundColor: data.categories.map(c => c.color),
+                borderWidth: 0,
+                hoverOffset: 0
+            }];
+
+            new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: colors,
-                        borderWidth: 0,
-                        hoverOffset: 0
-                    }]
+                    labels: data.categories.map(c => c.name),
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
-                    aspectRatio: 1, 
                     cutout: '70%',
                     plugins: {
                         legend: { display: false },
-                        tooltip: { enabled: false }
+                        tooltip: { enabled: false } // Отключаем стандартный тултип
                     }
                 }
             });
-        }
+        };
 
-        // 4. Инициализация графиков для каждого члена семьи
+        const renderLegend = (legendId, data) => {
+            const legendEl = document.getElementById(legendId);
+            legendEl.innerHTML = data.categories.map(c => createLegendItem(c, data.total)).join('');
+        };
         
-        // Ребенок
-        createChart(
-            'childChart', 
-            ['Еда', 'Развлечения', 'Транспорт', 'Обучение', 'Прочее'], 
-            [40, 30, 14, 10, 6], 
-            ['#B00020', '#D32F2F', '#FF5252', '#FF80AB', '#FF9800']
-        );
+        // --- 3. ИНИЦИАЛИЗАЦИЯ ---
         
-        // Мама (Parent #2)
-        createChart(
-            'parent2Chart', 
-            ['Продукты', 'Одежда', 'Красота', 'Дом', 'Прочее'], 
-            [35, 25, 20, 10, 10], 
-            ['#B00020', '#D32F2F', '#FF5252', '#FF80AB', '#FF9800']
-        );
+        renderChart('childChart', childData);
+        renderLegend('childLegend', childData);
         
-        // Папа (Parent #1)
-        createChart(
-            'parent1Chart', 
-            ['Авто', 'Связь', 'Еда', 'Развлечения', 'Прочее'], 
-            [45, 25, 15, 10, 5], 
-            ['#B00020', '#D32F2F', '#FF5252', '#FF80AB', '#FF9800']
-        );
+        renderChart('momChart', momData);
+        renderLegend('momLegend', momData);
 
-        // 5. Обработчики навигации
-        
+        renderChart('dadChart', dadData);
+        renderLegend('dadLegend', dadData);
+
+        // --- 4. НАВИГАЦИЯ ---
+
         // Кнопка Назад
         document.getElementById('backButton').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE;
+            window.location.href = MAIN_SCREEN_FILE;
+        });
+        
+        // Переход на Главный экран
+        document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE; 
         });
 
-        // Кнопка Главный в нижнем меню
-        document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE;
-        });
-        
-        // Кнопка "Вся аналитика" (переход назад на Главный экран)
-        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
-            window.location.href = MAIN_SCREEN_FILE;
-        });
-        
-        // Кнопка "Доходы" (пока заглушка)
+        // Таб "Доходы"
         document.getElementById('incomeTab').addEventListener('click', () => {
-            alert('Экран доходов еще не разработан. Переход на Главный экран (Вся аналитика).');
-            window.location.href = MAIN_SCREEN_FILE;
+            window.location.href = INCOME_FILE; 
+        });
+
+        // Таб "Вся аналитика"
+        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
+             window.location.href = MAIN_SCREEN_FILE; 
         });
         
-        // Кнопка "Расходы" (остаемся на этой странице, т.к. она и есть детализация расходов)
+        // Таб "Расходы" (остаемся на этой странице)
         document.getElementById('expensesTab').addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById('expensesTab').classList.add('active');
+             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+             document.getElementById('expensesTab').classList.add('active');
         });
     });
 </script>
