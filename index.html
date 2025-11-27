@@ -118,7 +118,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer; /* Сделаем карточку кликабельной */
+            cursor: pointer;
         }
         .banner-card:active {
             background-color: #ededed;
@@ -230,7 +230,6 @@
             color: var(--alfa-red);
         }
 
-
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -338,9 +337,7 @@
             <div class="chart-footer">
                 <ul class="legend">
                     <li class="legend-item"><span class="color-swatch c1"></span>Ребенок</li>
-                    <li class="legend-item"><span class="color-swatch c2"></span><span class="bold">Родитель #1</span></li>
-                    <li class="legend-item"><span class="color-swatch c3"></span><span class="bold">Родитель #2</span></li>
-                </ul>
+                    <li class="legend-item"><span class="color-swatch c2"></span><span class="bold">Мама</span></li> <li class="legend-item"><span class="color-swatch c3"></span><span class="bold">Папа</span></li> </ul>
 
                 <div class="actions">
                     <i class="fas fa-pencil-alt" id="editFamilyButton"></i> <i class="fas fa-download" id="importDataButton"></i> </div>
@@ -385,18 +382,19 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- ФАЙЛЫ ДЛЯ НАВИГАЦИИ (Соответствуют новым экранам) ---
+        // --- ФАЙЛЫ ДЛЯ НАВИГАЦИИ ---
         const EXPENSES_DETAIL_FILE = 'details.html';
         const AI_RECOMMENDATIONS_FILE = 'ai-recommendations.html';
-        const SETTINGS_FAMILY_FILE = 'settings-family.html'; // Экран редактирования семьи
-        const IMPORT_EXPORT_FILE = 'import-export.html'; // Экран источников данных
+        const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
+        const IMPORT_EXPORT_FILE = 'import-export.html'; 
 
         // --- ИНИЦИАЛИЗАЦИЯ ГРАФИКА ---
         const ctx = document.getElementById('expenseChart').getContext('2d');
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['Ребенок', 'Родитель #1', 'Родитель #2'], 
+                // ИЗМЕНЕНО: Обновленные метки для графика
+                labels: ['Ребенок', 'Мама', 'Папа'], 
                 datasets: [{
                     data: [15, 30, 55], // Примерные проценты расходов
                     backgroundColor: ['#801818', '#C02929', '#E04444'],
@@ -414,7 +412,7 @@
             }
         });
 
-        // --- ЛОГИКА НАВИГАЦИИ ---
+        // --- ЛОГИКА НАВИГАЦИИ (Полностью восстановлена и привязана к ID) ---
 
         // 1. Таб "Расходы" (Переход на Детализацию)
         document.getElementById('expensesTab').addEventListener('click', () => {
@@ -440,12 +438,11 @@
         });
 
         // 5. Иконка Редактирования (Карандаш)
-        const editFamilyButton = document.getElementById('editFamilyButton');
-        editFamilyButton.addEventListener('click', () => {
+        document.getElementById('editFamilyButton').addEventListener('click', () => {
              window.location.href = SETTINGS_FAMILY_FILE; 
         });
         
-        // 6. Иконка Скачивания (переход на Источники данных/Импорт)
+        // 6. Иконка Скачивания (переход на Импорт/Источники)
         document.getElementById('importDataButton').addEventListener('click', () => {
              window.location.href = IMPORT_EXPORT_FILE; 
         });
