@@ -44,7 +44,7 @@
             overflow-x: hidden;
         }
 
-        /* Шапка и навигация - Идентичны первому экрану */
+        /* Шапка и навигация */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -223,7 +223,7 @@
         .d-c4 { background-color: var(--detail-c4); }
 
 
-        /* Нижнее меню - Идентично первому экрану */
+        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -443,7 +443,7 @@
         new Chart(document.getElementById('parent2Chart').getContext('2d'), { type: 'doughnut', data: { labels: ['Коммуналка', 'Продукты', 'Спорт', 'Отдых'], datasets: [{ data: chartData, backgroundColor: chartColors, borderWidth: 0, hoverOffset: 0 }] }, options: chartOptions });
 
 
-        // ЛОГИКА КЛИКАБЕЛЬНОСТИ:
+        // ЛОГИКА КЛИКАБЕЛЬНОСТИ
         document.querySelectorAll('.detail-card').forEach(card => {
             const title = card.querySelector('h3').textContent;
             card.addEventListener('click', () => {
@@ -451,9 +451,9 @@
             });
         });
 
-        const mainScreenFile = 'Аналитика расходов (Основной экран).html';
+        const mainScreenFile = 'index.html'; // НОВОЕ ИМЯ ГЛАВНОГО ФАЙЛА!
 
-        // ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТАБОВ
+        // ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТАБОВ (ВОЗВРАТ)
         // Переход на первый экран (Вся аналитика)
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
              window.location.href = mainScreenFile;
