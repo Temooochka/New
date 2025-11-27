@@ -376,7 +376,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Константа с именем файла главного экрана
-        const MAIN_SCREEN_FILE = 'Аналитика расходов (Основной экран).html'; 
+        const MAIN_SCREEN_FILE = 'index.html'; // ИСПРАВЛЕНО: Главный экран теперь index.html
         
         // Функция для создания кольцевого графика
         function createDoughnutChart(ctxId, data, labels, colors) {
@@ -420,7 +420,7 @@
         createDoughnutChart('chart-dad', dadData, ['Авто', 'Техника', 'Спорт', 'Хобби', 'Прочее'], colors);
 
 
-        // --- ЛОГИКА НАВИГАЦИИ (ИСПРАВЛЕНО) ---
+        // --- ЛОГИКА НАВИГАЦИИ ---
         
         // Кнопка Назад (стрелка влево) - ВОЗВРАЩАЕТ НА ГЛАВНЫЙ ЭКРАН
         document.querySelector('.back-button').addEventListener('click', () => {
