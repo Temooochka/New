@@ -20,7 +20,6 @@
         :root {
             --alfa-red: #EE3124;
             --main-green: #34A853; 
-            /* Цвета для диаграммы расходов (для Вся Аналитика) */
             --red-c1-dark: #801818; 
             --red-c2-medium: #C02929;
             --red-c3-light: #E04444; 
@@ -62,7 +61,7 @@
             color: var(--text-color);
         }
         .settings-icon {
-            transform: rotate(90deg); /* Иконка настроек */
+            transform: rotate(90deg); 
             cursor: pointer;
         }
 
@@ -118,7 +117,7 @@
             padding: 20px;
         }
         
-        /* Баннер семейной аналитики */
+        /* ... (Стили для баннеров и графиков) ... */
         .banner-card {
             background-color: var(--bg-light-gray);
             display: flex;
@@ -156,7 +155,6 @@
             font-size: 18px;
         }
 
-        /* График */
         .chart-card {
             padding: 20px 20px 10px 20px;
             text-align: center;
@@ -297,6 +295,25 @@
             font-size: 10px;
             margin-left: 5px;
             color: white;
+        }
+
+        /* Настройка главного экрана (Новая секция) */
+        .settings-main-screen {
+            text-align: center;
+            padding: 20px 0;
+            cursor: pointer;
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .settings-main-screen i {
+            font-size: 22px;
+            color: #666;
         }
 
 
@@ -450,6 +467,11 @@
             </div>
         </div>
         
+        <div class="settings-main-screen" id="mainScreenSettingsLink">
+            <i class="fas fa-cog"></i> 
+            Настроить главный экран
+        </div>
+        
     </main>
 
     <nav class="bottom-nav">
@@ -480,11 +502,11 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Мы предполагаем, что другие файлы будут называться так:
         const EXPENSES_DETAIL_FILE = 'details.html';
         const INCOME_DETAIL_FILE = 'income.html';
         const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
-        const MAIN_SCREEN_FILE = 'glavnyi.html'; // Обновленное имя текущего файла
+        const MAIN_SCREEN_FILE = 'glavnyi.html'; 
+        const CUSTOMIZATION_FILE = 'index.html'; // Целевой файл для "Настроить главный экран"
 
         // --- 1. График расходов (Вся аналитика) ---
         const ctx = document.getElementById('expenseChart').getContext('2d');
@@ -493,8 +515,8 @@
             data: {
                 labels: ['Ребенок', 'Родитель #1', 'Родитель #2'], 
                 datasets: [{
-                    data: [15, 30, 55], // Примерные данные
-                    backgroundColor: ['#801818', '#C02929', '#E04444'], // Унифицированные цвета
+                    data: [15, 30, 55], 
+                    backgroundColor: ['#801818', '#C02929', '#E04444'],
                     borderWidth: 0,
                     hoverOffset: 0
                 }]
@@ -509,8 +531,9 @@
             }
         });
 
-        // --- 2. Логика переключения табов и навигация ---
+        // --- 2. Логика навигации ---
         
+        // Переключение табов
         document.getElementById('expensesTab').addEventListener('click', () => {
             window.location.href = EXPENSES_DETAIL_FILE; 
         });
@@ -519,37 +542,34 @@
             window.location.href = INCOME_DETAIL_FILE; 
         });
 
-        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
-             // Мы уже на этом экране (glavnyi.html)
-             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-             document.getElementById('allAnalyticsTab').classList.add('active');
-        });
-        
+        // Иконка "Настроить" в шапке ведет на настройки семьи
         document.getElementById('settingsIcon').addEventListener('click', () => {
              window.location.href = SETTINGS_FAMILY_FILE; 
         });
         
-        // Кнопка для редактирования, переход на страницу детализации расходов (details.html)
+        // Кнопка для редактирования ведет на детализацию расходов
         document.getElementById('editIcon').addEventListener('click', () => {
              window.location.href = EXPENSES_DETAIL_FILE; 
         });
         
-        // Кнопка загрузки (пока заглушка)
+        // КАРТОЧКА: Настроить главный экран -> index.html (как запрошено)
+        document.getElementById('mainScreenSettingsLink').addEventListener('click', () => {
+             window.location.href = CUSTOMIZATION_FILE; 
+        });
+
+        // ... Другая навигация (скачивание, чат, баннер) ...
         document.getElementById('downloadIcon').addEventListener('click', () => {
              alert('Данные скачаны!');
         });
         
-        // Переход по клику на карточку семейной аналитики (details.html)
         document.querySelector('.card.banner-card').addEventListener('click', () => {
              window.location.href = EXPENSES_DETAIL_FILE; 
         });
 
-        // Открытие чата ИИ (заглушка)
         document.querySelector('.ai-chat-button').addEventListener('click', () => {
              alert('Открывается чат с Альфа-ИИ!'); 
         });
         
-        // Навигация по нижнему меню
         document.querySelector('.nav-item.active-nav').addEventListener('click', () => {
              window.location.href = MAIN_SCREEN_FILE;
         });
