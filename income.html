@@ -8,8 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* ... CSS стили остались прежними, кроме блока :root для новых цветов ... */
-
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -24,19 +22,18 @@
             --bg-light-gray: #F7F7F7;
             --text-color: #333;
             --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            /* Уникальные цвета для членов семьи в диаграмме доходов */
-            --member-dad-color: #1A73E8; /* Синий для Папы */
-            --member-mom-color: #F4B400; /* Желтый/Оранжевый для Мамы */
-            --member-child-color: #0F9D58; /* Зеленый для Ребенка */
+            /* УНИФИЦИРОВАННЫЕ ЦВЕТА С СЕМЕЙНОЙ АНАЛИТИКОЙ РАСХОДОВ */
+            --member-child-color: #801818;   /* Темно-бордовый (Ребенок) */
+            --member-mom-color: #C02929;     /* Средне-красный (Мама/Родитель #2) */
+            --member-dad-color: #E04444;     /* Светло-красный (Папа/Родитель #1) */
         }
         
         /* Обновление стилей легенды для использования новых переменных */
-        .income-legend-item:nth-child(1) .color-swatch-chart { background-color: var(--member-dad-color); } /* Папа */
-        .income-legend-item:nth-child(2) .color-swatch-chart { background-color: var(--member-mom-color); } /* Мама */
-        .income-legend-item:nth-child(3) .color-swatch-chart { background-color: var(--member-child-color); } /* Ребенок */
+        /* Порядок в HTML: Папа (1), Мама (2), Ребенок (3) */
+        .income-legend-item:nth-child(1) .color-swatch-chart { background-color: var(--member-dad-color); } 
+        .income-legend-item:nth-child(2) .color-swatch-chart { background-color: var(--member-mom-color); }
+        .income-legend-item:nth-child(3) .color-swatch-chart { background-color: var(--member-child-color); }
 
-
-        /* ... Остальные стили ... */
 
         .app-screen {
             width: 100%;
@@ -179,7 +176,7 @@
             font-size: 24px;
             font-weight: 700;
             margin: 0 0 15px 0;
-            color: var(--main-green); 
+            color: var(--main-green); /* Цвет заголовка остался зеленым */
         }
         .member-info h3 {
              font-size: 18px;
@@ -190,7 +187,7 @@
         .member-info p {
             font-size: 26px;
             font-weight: 700;
-            color: var(--main-green); 
+            color: var(--main-green); /* Цвет суммы остался зеленым */
             margin: 0 0 10px 0;
         }
 
@@ -387,12 +384,11 @@
         const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
         const MEMBER_NAMES_KEY = 'familyMemberNames';
 
-        // --- 0. КОНСТАНТЫ ЦВЕТОВ ---
-        // Используем более контрастные цвета для наглядности
+        // --- 0. КОНСТАНТЫ ЦВЕТОВ (Унифицированы с расходами) ---
         const COLORS = {
-            DAD: '#1A73E8',    // Синий
-            MOM: '#F4B400',    // Желтый
-            CHILD: '#0F9D58'   // Зеленый
+            CHILD: '#801818',    // Темно-бордовый
+            MOM: '#C02929',      // Средне-красный
+            DAD: '#E04444'       // Светло-красный
         };
         
         // --- 1. ЗАГРУЗКА ИМЕН И ОБНОВЛЕНИЕ ЗАГОЛОВКОВ ---
@@ -419,34 +415,34 @@
         const TOTAL_FAMILY_INCOME = 150000;
         const formatRuble = (amount) => amount.toLocaleString('ru-RU') + ' ₽';
         
-        // Распределение доходов по членам семьи (ВАЖНО: Порядок должен совпадать с массивом цветов в renderChart)
+        // Распределение доходов по членам семьи (ПОРЯДОК: Папа, Мама, Ребенок)
         const incomeDistributionData = [
-            { name: memberNames.parent1, amount: 90000, color: COLORS.DAD }, // Папа (90K)
-            { name: memberNames.parent2, amount: 55000, color: COLORS.MOM }, // Мама (55K)
-            { name: memberNames.child, amount: 5000, color: COLORS.CHILD }    // Ребенок (5K)
+            { name: memberNames.parent1, amount: 90000, color: COLORS.DAD }, 
+            { name: memberNames.parent2, amount: 55000, color: COLORS.MOM }, 
+            { name: memberNames.child, amount: 5000, color: COLORS.CHILD }    
         ];
 
         // Детальные данные для легенд внизу
         const childIncomeData = {
             total: 5000,
             categories: [
-                { name: 'Подарок', amount: 3000, color: COLORS.CHILD }, // Используем цвет Ребенка
-                { name: 'Стипендия', amount: 2000, color: '#4CAF50' } // Дополнительный оттенок
+                { name: 'Подарок', amount: 3000, color: COLORS.CHILD }, 
+                { name: 'Стипендия', amount: 2000, color: '#C45757' } // Дополнительный оттенок красного
             ]
         };
         const momIncomeData = {
             total: 55000,
             categories: [
-                { name: 'Зарплата', amount: 44000, color: COLORS.MOM }, // Используем цвет Мамы
-                { name: 'Кэшбэк', amount: 5500, color: '#FFEB3B' }, // Дополнительный оттенок
-                { name: 'Продажа', amount: 5500, color: '#FF9800' }  // Дополнительный оттенок
+                { name: 'Зарплата', amount: 44000, color: COLORS.MOM }, 
+                { name: 'Кэшбэк', amount: 5500, color: '#E08080' }, 
+                { name: 'Продажа', amount: 5500, color: '#FFB8B8' }  
             ]
         };
         const dadIncomeData = {
             total: 90000,
             categories: [
-                { name: 'Зарплата', amount: 85500, color: COLORS.DAD }, // Используем цвет Папы
-                { name: 'Проценты', amount: 4500, color: '#2196F3' } // Дополнительный оттенок
+                { name: 'Зарплата', amount: 85500, color: COLORS.DAD }, 
+                { name: 'Проценты', amount: 4500, color: '#FF7F7F' } 
             ]
         };
 
@@ -463,7 +459,7 @@
                     labels: incomeDistributionData.map(d => d.name),
                     datasets: [{
                         data: incomeDistributionData.map(d => d.amount),
-                        backgroundColor: incomeDistributionData.map(d => d.color), // Здесь используются цвета
+                        backgroundColor: incomeDistributionData.map(d => d.color), 
                         borderWidth: 0,
                         hoverOffset: 10
                     }]
@@ -519,15 +515,22 @@
         });
 
         document.getElementById('expensesTab').addEventListener('click', () => {
-            window.location.href = EXPENSES_DETAIL_FILE; 
+            window.location.href = EXPENSES_DETAIL_FILE; /* Предполагая, что файл с детализацией расходов называется details.html */
         });
 
         document.getElementById('allAnalyticsTab').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE; 
+             window.location.href = MAIN_SCREEN_FILE; /* Предполагая, что файл с общей аналитикой называется index.html */
         });
         
         document.getElementById('settingsIcon').addEventListener('click', () => {
-             window.location.href = SETTINGS_FAMILY_FILE; 
+             window.location.href = SETTINGS_FAMILY_FILE; /* Предполагая, что файл настроек называется settings-family.html */
+        });
+        
+        // Вкладка "Доходы" уже активна на этой странице, но можно добавить логику для переключения
+        document.getElementById('incomeTab').addEventListener('click', () => {
+             // Текущая страница, можно просто обновить активный статус
+             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+             document.getElementById('incomeTab').classList.add('active');
         });
     });
 </script>
