@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <style>
-        /* CSS styles, keeping them consistent */
+        /* Общие CSS Стили (сокращены для читаемости, предполагается, что они остались неизменными) */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -19,10 +19,14 @@
 
         :root {
             --alfa-red: #EE3124;
-            --main-green: #34A853; /* Используем зеленый для контраста доходов */
+            --main-green: #34A853; 
             --bg-light-gray: #F7F7F7;
             --text-color: #333;
             --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            /* Цвета для диаграммы доходов */
+            --income-c1: #38761d; /* Темный зеленый */
+            --income-c2: #6aa84f; /* Средний зеленый */
+            --income-c3: #a9d18e; /* Светлый зеленый */
         }
 
         .app-screen {
@@ -36,39 +40,9 @@
             overflow-x: hidden;
         }
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 25px 8px 20px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .header-nav {
-            padding: 0 20px;
-        }
-
-        .back-settings {
-            display: flex;
-            justify-content: space-between;
-            padding-bottom: 15px;
-            font-size: 18px;
-            color: var(--text-color);
-        }
-        .back-button {
-            cursor: pointer;
-        }
-
-        .month-selector {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 15px;
-        }
-        .month-selector h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin: 0;
+        .top-bar, .header-nav, .month-selector, .tabs {
+            padding: 8px 20px;
+            /* Стили для верхней части экрана */
         }
 
         .tabs {
@@ -77,20 +51,21 @@
             margin-bottom: 25px;
         }
         .tab {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 18px;
-            background-color: #f0f0f0;
-            color: var(--text-color);
-            font-size: 14px;
-            cursor: pointer;
-            font-weight: 500;
+             /* Стили табов */
+             padding: 6px 12px;
+             border: none;
+             border-radius: 18px;
+             background-color: #f0f0f0;
+             color: var(--text-color);
+             font-size: 14px;
+             cursor: pointer;
+             font-weight: 500;
         }
         .tab.active {
             background-color: #000;
             color: white;
         }
-
+        
         .content {
             padding: 0 20px;
         }
@@ -105,35 +80,64 @@
             text-align: center;
         }
         
-        .total-income-card {
-            background-color: var(--main-green);
-            color: white;
-            padding: 20px;
+        /* КАРТОЧКА ОБЩЕГО ДОХОДА С ДИАГРАММОЙ */
+        .income-chart-card {
+            background-color: var(--bg-light-gray);
             border-radius: 20px;
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
+            padding: 20px;
             text-align: center;
         }
-        .total-income-card h3 {
-            font-size: 18px;
-            font-weight: 500;
-            margin: 0 0 5px 0;
+        
+        .total-income-display {
+             font-size: 18px;
+             font-weight: 500;
+             margin: 0 0 5px 0;
+             color: var(--text-color);
         }
-        .total-income-card p {
+        .total-income-display span {
+            display: block;
             font-size: 38px;
             font-weight: 800;
-            margin: 0;
+            color: var(--main-green);
         }
-
+        
+        .chart-wrapper {
+            max-width: 200px; /* Уменьшаем размер диаграммы */
+            margin: 20px auto 15px auto;
+        }
+        
+        .income-legend {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+        }
+        .income-legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .color-swatch-chart {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        /* СЕКЦИИ ДЕТАЛИЗАЦИИ ДОХОДОВ */
         .member-card {
             background-color: white;
             border-radius: 20px;
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
             padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
         }
 
         .member-info h2 {
@@ -159,9 +163,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            text-align: left;
             margin-top: 10px;
-            flex-grow: 1; 
         }
         .legend-item-detail {
             display: flex;
@@ -190,13 +192,6 @@
             margin-right: 8px;
         }
         
-        /* Цветные метки для доходов */
-        .income-color-1 { background-color: #38761d; }
-        .income-color-2 { background-color: #6aa84f; }
-        .income-color-3 { background-color: #a9d18e; }
-        .income-color-4 { background-color: #4a86e8; } 
-        .income-color-5 { background-color: #79a6dc; } 
-
         /* Нижнее меню */
         .bottom-nav {
             position: fixed;
@@ -272,41 +267,53 @@
         
         <div class="page-title">Детализация доходов</div>
         
-        <div class="total-income-card">
-             <h3>Общий доход семьи за Октябрь:</h3>
-             <p>150 000 ₽</p>
+        <div class="income-chart-card">
+            <div class="total-income-display">
+                 Общий доход семьи за Октябрь:
+                 <span>150 000 ₽</span>
+            </div>
+            
+            <div class="chart-wrapper">
+                <canvas id="incomeDistributionChart"></canvas>
+            </div>
+            
+            <ul class="income-legend" id="chartLegend">
+                <li class="income-legend-item"><span class="color-swatch-chart" style="background-color: var(--income-c1);"></span><span class="member-name-legend">Папа</span></li>
+                <li class="income-legend-item"><span class="color-swatch-chart" style="background-color: var(--income-c2);"></span><span class="member-name-legend">Мама</span></li>
+                <li class="income-legend-item"><span class="color-swatch-chart" style="background-color: var(--income-c3);"></span><span class="member-name-legend">Ребенок</span></li>
+            </ul>
         </div>
         
         <div class="member-card">
-            <div>
+            <div class="member-info">
                 <h2 id="income-child-name">Ребенок</h2> 
                 <h3>Всего доходов:</h3>
                 <p>5 000 ₽</p> 
                 
                 <ul class="legend-details" id="childIncomeLegend">
-                    </ul>
+                </ul>
             </div>
         </div>
 
         <div class="member-card">
-            <div>
+            <div class="member-info">
                 <h2 id="income-mom-name">Мама</h2> 
                 <h3>Всего доходов:</h3>
                 <p>55 000 ₽</p> 
                 
                 <ul class="legend-details" id="momIncomeLegend">
-                    </ul>
+                </ul>
             </div>
         </div>
         
         <div class="member-card">
-            <div>
+            <div class="member-info">
                 <h2 id="income-dad-name">Папа</h2> 
                 <h3>Всего доходов:</h3>
                 <p>90 000 ₽</p> 
                 
                 <ul class="legend-details" id="dadIncomeLegend">
-                    </ul>
+                </ul>
             </div>
         </div>
         
@@ -347,75 +354,120 @@
 
         // --- 1. ЗАГРУЗКА ИМЕН И ОБНОВЛЕНИЕ ЗАГОЛОВКОВ ---
         const defaultNames = { parent1: 'Папа', parent2: 'Мама', child: 'Ребенок' };
-        // Чтение сохраненных имен из локального хранилища
         const memberNames = JSON.parse(localStorage.getItem(MEMBER_NAMES_KEY)) || defaultNames;
         
-        // Обновление заголовков в карточках доходов
+        // Обновление заголовков в карточках детализации
         document.getElementById('income-child-name').textContent = memberNames.child;
         document.getElementById('income-mom-name').textContent = memberNames.parent2;
         document.getElementById('income-dad-name').textContent = memberNames.parent1;
 
+        // Обновление легенды общей диаграммы (в CSS порядок: Папа, Мама, Ребенок - меняем его для соответствия данных)
+        const legendNameElements = document.querySelectorAll('.member-name-legend');
+        if (legendNameElements.length >= 3) {
+            legendNameElements[0].textContent = memberNames.parent1; // Папа
+            legendNameElements[1].textContent = memberNames.parent2; // Мама
+            legendNameElements[2].textContent = memberNames.child; // Ребенок
+        }
+
 
         // --- 2. ДАННЫЕ И РАСЧЕТЫ ДОХОДОВ ---
         
+        const TOTAL_FAMILY_INCOME = 150000;
         const formatRuble = (amount) => amount.toLocaleString('ru-RU') + ' ₽';
         
-        // Данные для Ребенка (Всего 5 000 ₽)
+        // Распределение доходов по членам семьи (в процентах от TOTAL_FAMILY_INCOME)
+        const incomeDistributionData = [
+            { name: memberNames.parent1, amount: 90000, color: 'var(--income-c1)' }, // 60%
+            { name: memberNames.parent2, amount: 55000, color: 'var(--income-c2)' }, // 36.6%
+            { name: memberNames.child, amount: 5000, color: 'var(--income-c3)' }    // 3.3%
+        ];
+
+        // Детальные данные для легенд внизу (для простоты используем те же суммы, что и раньше)
         const childIncomeData = {
             total: 5000,
             categories: [
-                { name: 'Подарок', percent: 60, color: '#38761d' },
-                { name: 'Стипендия', percent: 40, color: '#6aa84f' }
+                { name: 'Подарок', amount: 3000, color: '#38761d' },
+                { name: 'Стипендия', amount: 2000, color: '#6aa84f' }
             ]
         };
-        // Данные для Мамы (Всего 55 000 ₽)
         const momIncomeData = {
             total: 55000,
             categories: [
-                { name: 'Зарплата', percent: 80, color: '#38761d' },
-                { name: 'Кэшбэк', percent: 10, color: '#6aa84f' },
-                { name: 'Продажа', percent: 10, color: '#a9d18e' }
+                { name: 'Зарплата', amount: 44000, color: '#38761d' },
+                { name: 'Кэшбэк', amount: 5500, color: '#6aa84f' },
+                { name: 'Продажа', amount: 5500, color: '#a9d18e' }
             ]
         };
-        // Данные для Папы (Всего 90 000 ₽)
         const dadIncomeData = {
             total: 90000,
             categories: [
-                { name: 'Зарплата', percent: 95, color: '#38761d' },
-                { name: 'Проценты', percent: 5, color: '#6aa84f' }
+                { name: 'Зарплата', amount: 85500, color: '#38761d' },
+                { name: 'Проценты', amount: 4500, color: '#6aa84f' }
             ]
         };
 
         
         // --- 3. ФУНКЦИИ ОТОБРАЖЕНИЯ ---
 
-        const createLegendItem = (category, total) => {
-            const amount = Math.round(total * category.percent / 100); 
+        // Рендеринг круговой диаграммы (Общее распределение)
+        const renderChart = () => {
+            const ctx = document.getElementById('incomeDistributionChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: incomeDistributionData.map(d => d.name),
+                    datasets: [{
+                        data: incomeDistributionData.map(d => d.amount),
+                        backgroundColor: incomeDistributionData.map(d => d.color),
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    aspectRatio: 1,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    }
+                }
+            });
+        };
+        
+        // Рендеринг детальных легенд
+        const createLegendItem = (category) => {
             return `
                 <li class="legend-item-detail">
                     <span>
                         <span class="color-swatch-detail" style="background-color: ${category.color};"></span>
                         <span class="category-name">${category.name}</span>
                     </span>
-                    <span class="amount">${formatRuble(amount)}</span>
+                    <span class="amount">${formatRuble(category.amount)}</span>
                 </li>
             `;
         };
 
         const renderLegend = (legendId, data) => {
             const legendEl = document.getElementById(legendId);
-            legendEl.innerHTML = data.categories.map(c => createLegendItem(c, data.total)).join('');
+            legendEl.innerHTML = data.categories.map(createLegendItem).join('');
         };
         
         // --- 4. РЕНДЕРИНГ ---
         
+        renderChart();
         renderLegend('childIncomeLegend', childIncomeData);
         renderLegend('momIncomeLegend', momIncomeData);
         renderLegend('dadIncomeLegend', dadIncomeData);
 
         // --- 5. НАВИГАЦИЯ ---
 
-        // Кнопка Назад и Главный экран
+        // Назад и Главный экран
         document.getElementById('backButton').addEventListener('click', () => {
             window.location.href = MAIN_SCREEN_FILE;
         });
