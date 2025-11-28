@@ -1,15 +1,13 @@
-<!DOCTYPE Posted Code>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аналитика расходов (Основной экран)</title>
+    <title>Импортировать данные</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-
+    
     <style>
-        /* Общие CSS Стили */
+        /* Общие переменные и стили */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -20,12 +18,8 @@
 
         :root {
             --alfa-red: #EE3124;
-            --red-c1-dark: #801818; 
-            --red-c2-medium: #C02929; 
-            --red-c3-light: #E04444; 
             --bg-light-gray: #F7F7F7;
             --text-color: #333;
-            --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .app-screen {
@@ -36,9 +30,9 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
             padding-bottom: 80px;
-            overflow-x: hidden;
         }
 
+        /* TOP BAR */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -48,189 +42,81 @@
         }
         .status-icons i { margin-left: 5px; }
 
+        /* HEADER NAV */
         .header-nav {
-            padding: 0 20px;
+            padding: 0 20px 20px 20px;
         }
 
-        .back-settings {
+        .back-nav {
             display: flex;
             justify-content: space-between;
-            padding-bottom: 15px;
+            align-items: center;
+            padding-top: 15px;
+            padding-bottom: 30px;
             font-size: 18px;
             color: var(--text-color);
-        }
-        .settings-icon {
-            transform: rotate(90deg);
             cursor: pointer;
         }
-        .back-button {
-            cursor: pointer;
-        }
-
-        .month-selector {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 15px;
-        }
-        .month-selector h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin: 0;
-        }
-        .month-selector .arrows i {
-            font-size: 14px;
-            padding-left: 10px;
-            cursor: pointer;
-        }
-        .disabled-arrow {
-            color: #ccc;
-            cursor: default;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 25px;
-        }
-        .tab {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 18px;
-            background-color: #f0f0f0;
-            color: var(--text-color);
-            font-size: 14px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .tab.active {
-            background-color: #000;
-            color: white;
-        }
-
-        .content {
-            padding: 0 20px;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 20px;
-            padding: 20px;
-            cursor: pointer; 
-        }
-
-        .banner-card {
+        
+        /* IMPORT CARD */
+        .import-card {
             background-color: var(--bg-light-gray);
+            border-radius: 20px;
+            margin: 0 20px 20px 20px;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
         }
-        .banner-text h3 {
-            font-size: 16px;
+        .import-card-title h3 {
+            font-size: 18px;
             margin: 0 0 5px 0;
             font-weight: 600;
         }
-        .banner-text p {
+        .import-card-title p {
             font-size: 14px;
             margin: 0;
             color: #666;
-            display: flex;
-            align-items: center;
         }
-        .arrow-right {
-            font-size: 20px;
-            line-height: 0;
-            margin-left: 5px;
+        .download-icon {
+            font-size: 24px;
+            color: var(--text-color);
         }
 
-        .alfa-icon-a {
-            width: 30px;
-            height: 30px;
-            background-color: var(--alfa-red);
-            color: white;
-            border-radius: 50%;
+        /* IMPORT FORMAT BUTTONS */
+        .format-button {
+            background-color: var(--bg-light-gray);
+            border-radius: 20px;
+            margin: 0 20px 15px 20px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .format-button span {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .format-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 20px;
             font-weight: bold;
-            font-size: 18px;
+            color: var(--text-color);
         }
+        .format-icon.csv { background-color: #e0f7e0; color: #4CAF50; }
+        .format-icon.xlsx { background-color: #f7e0e0; color: #EE3124; }
+        .format-icon.txt { background-color: #e0e0f7; color: #3F51B5; }
 
-        .ai-card {
-            padding: 15px 20px;
-        }
-        .ai-button {
-            background: linear-gradient(90deg, #F06E66, var(--alfa-red));
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 18px;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        .ai-button i {
-            font-size: 10px;
-            margin-left: 5px;
-            color: white;
-        }
 
-        .chart-card {
-            padding: 20px 20px 10px 20px;
-            text-align: center;
-        }
-
-        .chart-canvas-wrapper {
-            max-width: 250px;
-            margin: 0 auto 10px auto;
-            cursor: pointer;
-        }
-
-        .chart-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-top: 10px;
-        }
-
-        .legend {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            text-align: left;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 16px;
-            line-height: 1.2;
-            cursor: pointer; 
-        }
-        .color-swatch {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .c1 { background-color: var(--red-c1-dark); }
-        .c2 { background-color: var(--red-c2-medium); }
-        .c3 { background-color: var(--red-c3-light); }
-        .bold { font-weight: 700; }
-
-        .actions i {
-            font-size: 22px;
-            color: #666;
-            margin-left: 20px;
-            cursor: pointer;
-        }
-
+        /* BOTTOM NAV (Копируем из glavnyi.html) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -261,29 +147,12 @@
             font-size: 22px;
             margin-bottom: 4px;
         }
-
-        .badge {
-            position: absolute;
-            top: 0px; 
-            right: 50%;
-            transform: translateX(120%);
-            background-color: var(--alfa-red);
-            color: white;
-            border-radius: 50%;
-            font-size: 10px;
-            width: 15px;
-            height: 15px;
-            line-height: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .nav-item:last-child .badge { 
-            right: 20px; 
-        }
-
-        .active-nav i, .active-nav span:not(.badge) { 
+        
+        /* Активный элемент - История, как точка входа */
+        .nav-item:nth-child(4) i, .nav-item:nth-child(4) span {
             color: var(--alfa-red);
         }
+
     </style>
 </head>
 <body>
@@ -300,67 +169,42 @@
     </div>
 
     <header class="header-nav">
-        <div class="back-settings">
-            <i class="fas fa-chevron-left back-button"></i>
-            <i class="fas fa-sliders-h settings-icon" id="settingsIcon"></i> 
-        </div>
-        
-        <div class="month-selector">
-            <h1>Октябрь</h1>
-            <div class="arrows">
-                <i class="fas fa-chevron-left disabled-arrow"></i>
-                <i class="fas fa-chevron-right"></i>
+        <div class="back-nav" id="backToMain">
+            <i class="fas fa-chevron-left"></i>
             </div>
-        </div>
-        
-        <div class="tabs">
-            <button class="tab" id="expensesTab">Расходы</button>
-            <button class="tab" id="incomeTab">Доходы</button> 
-            <button class="tab active" id="allAnalyticsTab">Вся аналитика</button>
-        </div>
     </header>
 
-    <main class="content">
-
-        <div class="card banner-card" id="familyAnalyticsCard">
-            <div class="banner-text">
-                <h3>Семейная аналитика расходов</h3>
-                <p>Статистика по семейным тратам <span class="arrow-right">→</span></p>
-            </div>
-            <div class="alfa-icon-a">A</div>
+    <div class="import-card">
+        <div class="import-card-title">
+            <h3>Импортировать данные</h3>
+            <p>В любом удобном формате</p>
         </div>
+        <i class="fas fa-download download-icon"></i>
+    </div>
 
-        <div class="card chart-card">
-            <div class="chart-canvas-wrapper" id="expenseChartWrapper"> 
-                <canvas id="expenseChart"></canvas>
-            </div>
-            
-            <div class="chart-footer">
-                <ul class="legend">
-                    <li class="legend-item"><span class="color-swatch c1"></span><span class="member-name">Ребенок</span></li>
-                    <li class="legend-item"><span class="color-swatch c2"></span><span class="bold member-name">Мама</span></li>
-                    <li class="legend-item"><span class="color-swatch c3"></span><span class="bold member-name">Папа</span></li>
-                </ul>
-
-                <div class="actions">
-                    <i class="fas fa-pencil-alt" id="editFamilyButton"></i> 
-                    <i class="fas fa-download" id="importDataButton"></i>
-                </div>
-            </div>
+    <div class="format-button">
+        <span>Импорт в CSV</span>
+        <div class="format-icon csv">
+            <i class="fas fa-file-csv"></i>
         </div>
+    </div>
 
-        <div class="card banner-card ai-card" id="aiRecommendationsCard">
-            <div class="banner-text">
-                <h3>Рекомендации ИИ</h3>
-                <p>На базе семейных расходов <span class="arrow-right">→</span></p>
-            </div>
-            <button class="ai-button" id="aiButton">Альфа-ИИ<i class="fas fa-plus-circle"></i></button>
+    <div class="format-button">
+        <span>Импорт в Xlsx</span>
+        <div class="format-icon xlsx">
+            <i class="fas fa-file-excel"></i>
         </div>
+    </div>
 
-    </main>
-
+    <div class="format-button">
+        <span>Импорт в TXT</span>
+        <div class="format-icon txt">
+            <i class="fas fa-file-alt"></i>
+        </div>
+    </div>
+    
     <nav class="bottom-nav">
-        <div class="nav-item active-nav main-nav">
+        <div class="nav-item" id="navToMain">
             <i class="fas fa-home"></i>
             <span>Главный</span>
         </div>
@@ -373,7 +217,7 @@
             <i class="fas fa-heart"></i>
             <span>Выгода</span>
         </div>
-        <div class="nav-item">
+        <div class="nav-item active-nav">
             <i class="fas fa-history"></i>
             <span>История</span>
         </div>
@@ -387,120 +231,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- ФАЙЛЫ ДЛЯ НАВИГАЦИИ и КЛЮЧ ---
-        const MAIN_SCREEN_FILE = 'index.html'; 
-        const EXPENSES_DETAIL_FILE = 'details.html'; 
-        const INCOME_FILE = 'income.html'; 
-        const AI_RECOMMENDATIONS_FILE = 'ai-recommendations.html';
-        const SETTINGS_FAMILY_FILE = 'settings-family.html'; 
-        const IMPORT_EXPORT_FILE = 'import-export.html'; 
-        const MEMBER_NAMES_KEY = 'familyMemberNames';
-
-        // --- ИНИЦИАЛИЗАЦИЯ ИМЕН (Чтение из localStorage) ---
-        // Устанавливаем дефолтные имена, если их нет в localStorage
-        const defaultNames = {
-            parent1: 'Папа',
-            parent2: 'Мама',
-            child: 'Ребенок'
-        };
-        if (!localStorage.getItem(MEMBER_NAMES_KEY)) {
-            localStorage.setItem(MEMBER_NAMES_KEY, JSON.stringify(defaultNames));
-        }
-
-        const memberNames = JSON.parse(localStorage.getItem(MEMBER_NAMES_KEY));
-        
-        // Обновление легенды на главном экране
-        const legendItems = document.querySelectorAll('.legend-item .member-name');
-        
-        if (legendItems.length >= 3) {
-            legendItems[0].textContent = memberNames.child; 
-            legendItems[1].textContent = memberNames.parent2; 
-            legendItems[2].textContent = memberNames.parent1; 
-        }
-
-        // --- ИНИЦИАЛИЗАЦИЯ ГРАФИКА ---
-        const ctx = document.getElementById('expenseChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                // Используем имена из localStorage для меток графика
-                labels: [memberNames.child, memberNames.parent2, memberNames.parent1], 
-                datasets: [{
-                    data: [15, 30, 55], 
-                    backgroundColor: ['#801818', '#C02929', '#E04444'],
-                    borderWidth: 0,
-                    hoverOffset: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                aspectRatio: 1, 
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false }
-                }
-            }
+        // Переход по кнопке "Назад" и "Главный" на главную страницу
+        document.getElementById('backToMain').addEventListener('click', () => {
+             window.location.href = 'glavnyi.html'; 
         });
-
-        // --- ЛОГИКА НАВИГАЦИИ (ОБНОВЛЕННАЯ) ---
-
-        // Переходы на Детализацию расходов (details.html)
-        document.querySelectorAll('.legend-item').forEach(item => {
-             item.addEventListener('click', () => {
-                 window.location.href = EXPENSES_DETAIL_FILE;
-             });
+        document.getElementById('navToMain').addEventListener('click', () => {
+             window.location.href = 'glavnyi.html'; 
         });
-        document.getElementById('expenseChartWrapper').addEventListener('click', () => { 
-             window.location.href = EXPENSES_DETAIL_FILE; 
-        });
-        document.getElementById('expensesTab').addEventListener('click', () => {
-            window.location.href = EXPENSES_DETAIL_FILE; 
-        });
-        document.getElementById('familyAnalyticsCard').addEventListener('click', () => {
-             window.location.href = EXPENSES_DETAIL_FILE; 
-        });
-
-        // ПЕРЕХОД НА ЭКРАН ДОХОДОВ (income.html)
-        document.getElementById('incomeTab').addEventListener('click', () => {
-            window.location.href = INCOME_FILE; 
-        });
-        
-        // ПЕРЕХОД НА НАСТРОЙКИ (settings-family.html) - Активация Карандаша
-        document.getElementById('settingsIcon').addEventListener('click', () => {
-             window.location.href = SETTINGS_FAMILY_FILE; 
-        });
-        document.getElementById('editFamilyButton').addEventListener('click', () => {
-             window.location.href = SETTINGS_FAMILY_FILE; 
-        });
-
-        // ПЕРЕХОД НА ИМПОРТ/ЭКСПОРТ (import-export.html)
-        document.getElementById('importDataButton').addEventListener('click', () => {
-             window.location.href = IMPORT_EXPORT_FILE; 
-        });
-        
-        // ПЕРЕХОД НА РЕКОМЕНДАЦИИ ИИ (ai-recommendations.html)
-        document.getElementById('aiRecommendationsCard').addEventListener('click', () => {
-             window.location.href = AI_RECOMMENDATIONS_FILE; 
-        });
-        document.getElementById('aiButton').addEventListener('click', (e) => { 
-             e.stopPropagation(); 
-             window.location.href = AI_RECOMMENDATIONS_FILE; 
-        });
-        
-        // Прочие переходы
-        document.querySelector('.back-button').addEventListener('click', () => {
-             alert('Переход назад (имитация).');
-        });
-        
-        document.getElementById('allAnalyticsTab').addEventListener('click', () => {
-             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-             document.getElementById('allAnalyticsTab').classList.add('active');
-        });
-        
-        document.querySelector('.nav-item.main-nav').addEventListener('click', () => {
-             window.location.href = MAIN_SCREEN_FILE; 
-        });
-    });
-</script>
-</body>
-</html>
